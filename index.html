@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">  
+        <title>IHS Artists</title>
+        <meta name="description" content="Irvington High School Artists Portfolio">
+        <link rel="stylesheet" href="styles.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
+        <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,500,700" rel="stylesheet">
+        <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
+    </head>
+    <body>
+        <div id='page-container'>
+            <h1 id='title'>IHS Artists</h1>
+            <div id='search-box'>
+                <input id='search-input' value='search' class='material-icons' type='text' onclick='expandSearch()'>
+                <br><div id='search-cancel' onclick='clearSearch()'>x</div>
+            </div>
+            <h3 id='search-failed'>No search results.</h3>
+        </div>
+        <br><img id="loader" src ="https://camo.githubusercontent.com/ce652d1e71659b7b61187377a4c337558ed9296b/687474703a2f2f692e696d6775722e636f6d2f637873543772532e676966">
+        
+        <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
+        <script src="scripts.js"></script>
+    </body>
+</html>

@@ -1,0 +1,75 @@
+body {
+    font-family: "Google Sans", "Arial", sans-serif;
+    background: #eeeeee;
+    text-align: center;
+}
+#page-container {
+    display: inline-block;
+    width: 100%;
+    max-width: 1000px;
+    text-align: left;
+    margin-bottom: 100px;
+}
+#title-container {
+    margin-top: 18px;
+    display: table;
+    vertical-align: middle;
+    height: 85px;
+    margin-left: 2%;
+}
+#title {
+    display: table-cell;
+    vertical-align: middle;
+    position: relative;
+    color: #424242;
+}
+#home-button-container {
+    width: 100%;
+    text-align: right;
+    margin-top: -68px;
+}
+#home-button {
+    width: 50px;
+    height: 50px;
+    margin-right: 2%;
+    margin-left: 2%;
+    display: inline-block;
+    text-align: center;
+    background: white;
+    color: #757575;
+    -webkit-transition: background 0.3s, width 0.5s;
+    transition: background 0.3s, width 0.5s;
+}
+#home-button:hover {
+    cursor: pointer;
+    background: #e0e0e0;
+}
+#home-button-icon {
+    position: relative;
+    top: 12px;
+}
+#main-image-container {
+    width: 96%;
+    margin-left: 2%;
+    margin-top: 50px;
+    text-align: right;
+    display: none;
+}
+#main-image-padding-container {
+    display: inline-block;
+    max-width: 60%;
+    background: white;
+    padding: 10px;
+    margin-bottom: -5px;
+}
+#main-image-scroll-container {
+    overflow: scroll;
+}
+#main-image {
+    height: 380px;
+    margin-bottom: -5px;
+}
+#loader {
+    text-align: center;
+    margin-top: -75px;
+}
