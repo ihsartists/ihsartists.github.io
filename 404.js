@@ -15,3 +15,12 @@ if(window.innerWidth < 700){
     
     $('#search-failed').css('margin-left', '4%').css('margin-top', '20px');
 }
+
+$.get('/redirect-data.json', data => {
+    //Change when goes live on ihsartists.net
+    var findNewLocation = data['http://ihsartists.net/' + window.location.pathname];
+    
+    if(findNewLocation){
+        console.log(findNewLocation);
+    }
+});
