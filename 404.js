@@ -17,10 +17,14 @@ if(window.innerWidth < 700){
 }
 
 $.get('/redirect-data.json', data => {
-    //Change when goes live on ihsartists.net
     var findNewLocation = data['http://ihsartists.net' + window.location.pathname];
     
     if(findNewLocation){
-        console.log(findNewLocation);
+        if(findNewLocation.split('--')[0] == 'image'){
+            window.location = 'https://drive.google.com/file/d/' + indNewLocation.split('--')[1] + '/view'
+        }
+        if(findNewLocation.split('--')[0] == 'page'){
+            window.location = '/image?a=' + findNewLocation.split('--')[1].split('-')[0] + '&g=' + findNewLocation.split('--')[1].split('-')[1] + '&i=' + findNewLocation.split('--')[1].split('-')[2];
+        }
     }
 });
