@@ -14,6 +14,43 @@ if(window.innerWidth < 700){
     $('#title').css('margin-top', '20px');
 }
 
+function loadPage(data){
+    $('#loader').css('display', 'none');
+
+    var frontData = JSON.parse(data);
+    console.log(frontData);
+    
+    for(var i = Object.keys(frontData.years).length - 1; i > -1; i--){
+        $('#page-container').append('<div class="year" id="year'+ i +'"><h2 class="year-name">'+ frontData.years[i].name +'</h2></div>');
+
+        for(var j = 0; j < frontData.years[i][deviceType].length; j++){
+            $('#year'+ i).append('<div onclick="window.location = \'image/?a='+ frontData.years[i][deviceType][j] +'&g=0&i=0&t='+ frontData[frontData.years[i][deviceType][j]].name.split("'").join("\\'") +'\'" class="artist"><img class="artist-thumb" src="/images/artist-thumb--' + frontData.years[i][deviceType][j] + '.jpg"><div class="artist-bottom"><p class="artist-name">'+ frontData[frontData.years[i][deviceType][j]].name +'</p></div></button>');
+            }
+
+        if(deviceType == 'mobile'){
+            $('.artist').css('width', '31.33%').css('padding-top', '1.5%');
+            $('.year-name').css('margin-left', '4%');
+            $('.artist-name').css('font-size', '14px');
+            $('.artist-bottom').css('height', '43px');
+        }
+    }
+}
+
+if (typeof(Storage) !== "undefined") {
+    if(sessionStorage.frontPage){
+        loadPage(sessionStorage.frontPage);
+    } else {
+        $.get('https://script.google.com/macros/s/AKfycbwTAO9B2U1gTxJtWDl2d0JUdQZlsRpC9a3Po3plc4ux-QWpYMs/exec', data => {
+            loadPage(data);
+            sessionStorage.frontPage = data;
+        });
+    }
+} else {
+    $.get('https://script.google.com/macros/s/AKfycbwTAO9B2U1gTxJtWDl2d0JUdQZlsRpC9a3Po3plc4ux-QWpYMs/exec', data => {
+        loadPage(data);
+    });
+}
+
 function expandSearch() {
     $('#search-input').removeClass('material-icons').attr('onclick', '').css('background', '#e0e0e0').attr('readOnly', false);
     if($('#search-input').val() == 'search'){
@@ -147,26 +184,4 @@ $("#search-input").keyup(function () {
 $("button").click(function () {
    $("input").val('');
    $(this).hide();
-});
-
-$.get('https://script.google.com/macros/s/AKfycbwTAO9B2U1gTxJtWDl2d0JUdQZlsRpC9a3Po3plc4ux-QWpYMs/exec', data => {
-    
-    $('#loader').css('display', 'none');
-    
-    var frontData = JSON.parse(data);
-    
-    for(var i = Object.keys(frontData.years).length - 1; i > -1; i--){
-        $('#page-container').append('<div class="year" id="year'+ i +'"><h2 class="year-name">'+ frontData.years[i].name +'</h2></div>');
-        
-        for(var j = 0; j < frontData.years[i][deviceType].length; j++){
-            $('#year'+ i).append('<div onclick="window.location = \'image/?a='+ frontData.years[i][deviceType][j] +'&g=0&i=0&t='+ frontData[frontData.years[i][deviceType][j]].name.split("'").join("\\'") +'\'" class="artist"><img class="artist-thumb" src="http://drive.google.com/uc?export=download&id='+ frontData[frontData.years[i][deviceType][j]].thumb +'"><div class="artist-bottom"><p class="artist-name">'+ frontData[frontData.years[i][deviceType][j]].name +'</p></div></button>');
-        }
-        
-        if(deviceType == 'mobile'){
-            $('.artist').css('width', '31.33%').css('padding-top', '1.5%');
-            $('.year-name').css('margin-left', '4%');
-            $('.artist-name').css('font-size', '14px');
-            $('.artist-bottom').css('height', '43px');
-        }
-    }
 });
