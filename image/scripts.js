@@ -44,6 +44,35 @@ if(image){} else {
     image = 0;
 }
 
+function resizeImage() {
+    if(deviceType == 'mobile'){
+
+        aspectRatio = $('#main-image').width() / $('#main-image').height();
+
+        if(aspectRatio > 2){
+            $('#main-image').css('height', '240px');
+        } else if(aspectRatio > 1.5){
+            $('#main-image').css('height', '265px');
+        } else if(aspectRatio > 1){
+            $('#main-image').css('height', '290px');
+        } else if(aspectRatio > 0.75){
+            $('#main-image').css('height', '305px');
+        } else if(aspectRatio > 0.5){
+            $('#main-image').css('height', '330px');
+        } else {
+            $('#main-image').css('height', '340px');
+        }
+    }
+}
+
+$('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + image + '.jpg').on('load', () => {
+                
+    $('#loader').css('display', 'none');
+    $('#main-image-container').css('display', 'block');
+    
+    resizeImage();
+});
+
 function loadPage(data){
     var artistData = JSON.parse(data.split("'").join("%39"));
         console.log(artistData);
@@ -62,24 +91,7 @@ function loadPage(data){
                 $('#loader').css('display', 'none');
                 $('#main-image-container').css('display', 'block');
 
-                if(deviceType == 'mobile'){
-
-                    aspectRatio = $('#main-image').width() / $('#main-image').height();
-
-                    if(aspectRatio > 2){
-                        $('#main-image').css('height', '240px');
-                    } else if(aspectRatio > 1.5){
-                        $('#main-image').css('height', '265px');
-                    } else if(aspectRatio > 1){
-                        $('#main-image').css('height', '290px');
-                    } else if(aspectRatio > 0.75){
-                        $('#main-image').css('height', '305px');
-                    } else if(aspectRatio > 0.5){
-                        $('#main-image').css('height', '330px');
-                    } else {
-                        $('#main-image').css('height', '340px');
-                    }
-                }
+                resizeImage();
             });
         }
         if(artistData.galleries[gallery].images[image].type == 'video'){
