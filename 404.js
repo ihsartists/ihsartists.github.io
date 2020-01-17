@@ -21,7 +21,7 @@ $.get('/redirect-data.json', data => {
     
     if(findNewLocation){
         if(findNewLocation.split('--')[0] == 'image'){
-            window.location = 'https://drive.google.com/file/d/' + indNewLocation.split('--')[1] + '/view'
+            window.location = 'https://drive.google.com/file/d/' + findNewLocation.split('--')[1] + '/view'
         }
         if(findNewLocation.split('--')[0] == 'page'){
             window.location = '/image?a=' + findNewLocation.split('--')[1].split('-')[0] + '&g=' + findNewLocation.split('--')[1].split('-')[1] + '&i=' + findNewLocation.split('--')[1].split('-')[2];
