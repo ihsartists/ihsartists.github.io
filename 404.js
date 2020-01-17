@@ -18,7 +18,7 @@ if(window.innerWidth < 700){
 
 $.get('/redirect-data.json', data => {
     //Change when goes live on ihsartists.net
-    var findNewLocation = data['http://ihsartists.net/' + window.location.pathname];
+    var findNewLocation = data['http://ihsartists.net' + window.location.pathname];
     
     if(findNewLocation){
         console.log(findNewLocation);
