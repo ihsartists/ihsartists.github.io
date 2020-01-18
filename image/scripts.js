@@ -48,22 +48,23 @@ function resizeImage() {
     
     var naturalWidth = $('#main-image')[0].naturalWidth;
     var naturalHeight = $('#main-image')[0].naturalHeight;
-    var aspectRatio = naturalWidth / naturalHeight;
     var containerWidth = $('#main-image-container').width();
    
     var scaleType = 'dynamic';
-    if(naturalWidth > 597 && naturalWidth < 603){
+    if(naturalWidth > 596 && naturalWidth < 608){
         scaleType = 'width';
-        if(naturalHeight > 452){
+        if(naturalHeight > 457){
             scaleType = 'vertical-scroll';
         }
     } 
-    else if(naturalHeight > 447 && naturalHeight < 453){
+    else if(naturalHeight > 446 && naturalHeight < 458){
         scaleType = 'height';
-        if(naturalWidth > 602){
+        if(naturalWidth > 607){
             scaleType = 'horizontal-scroll';
         }
     }
+    
+    console.log(scaleType);
     
     if(deviceType == 'desktop'){
         containerWidth -= 350;
@@ -73,24 +74,39 @@ function resizeImage() {
             
         }
         if(scaleType == 'height'){
+            console.log(containerWidth * (naturalHeight / naturalWidth))
+            $('#main-image').css('height', containerWidth * (naturalHeight / naturalWidth) + 'px').css('max-height', '450px');
+        }
+        if(scaleType == 'vertical-scroll'){
+            $('#main-image-scroll-container').css('overflow-y', 'scroll').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
+            $('#main-image').css('width', containerWidth + 'px').css('max-width', '600px');
+        }
+        if(scaleType == 'horizontal-scroll'){
+            $('#main-image-scroll-container').css('overflow-x', 'scroll');
+            $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px');
             $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
-            
         }
     }
     if(deviceType == 'mobile'){
-
-        if(aspectRatio > 2){
-            $('#main-image').css('height', '240px');
-        } else if(aspectRatio > 1.5){
-            $('#main-image').css('height', '265px');
-        } else if(aspectRatio > 1){
-            $('#main-image').css('height', '290px');
-        } else if(aspectRatio > 0.75){
-            $('#main-image').css('height', '305px');
-        } else if(aspectRatio > 0.5){
-            $('#main-image').css('height', '330px');
-        } else {
-            $('#main-image').css('height', '340px');
+        containerWidth -= 23;
+        
+        if(scaleType == 'width'){
+            $('#main-image').css('width', containerWidth + 'px').css('max-width', '600px');
+        }
+        if(scaleType == 'height'){
+            $('#main-image').css('height', '450px').css('max-width', containerWidth + 'px');
+            if($('#main-image').width() == containerWidth){
+                $('#main-image').css({height: ''});
+            }
+        }
+        if(scaleType == 'vertical-scroll'){
+            $('#main-image-scroll-container').css('overflow-y', 'scroll').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
+            $('#main-image').css('width', containerWidth + 'px').css('max-width', '600px');
+        }
+        if(scaleType == 'horizontal-scroll'){
+            $('#main-image-scroll-container').css('overflow-x', 'scroll');
+            $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px');
+            $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
         }
     }
 }

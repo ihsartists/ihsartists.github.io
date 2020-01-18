@@ -62,7 +62,7 @@ body {
     margin-bottom: -5px;
 }
 #main-image-scroll-container {
-    overflow: scroll;
+    overflow: none;
 }
 #main-image {
     margin-bottom: -5px;
