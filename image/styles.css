@@ -57,7 +57,6 @@ body {
 }
 #main-image-padding-container {
     display: inline-block;
-    max-width: 60%;
     background: white;
     padding: 10px;
     margin-bottom: -5px;
@@ -66,7 +65,6 @@ body {
     overflow: scroll;
 }
 #main-image {
-    height: 380px;
     margin-bottom: -5px;
 }
 #loader {

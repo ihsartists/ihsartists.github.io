@@ -45,9 +45,39 @@ if(image){} else {
 }
 
 function resizeImage() {
+    
+    var naturalWidth = $('#main-image')[0].naturalWidth;
+    var naturalHeight = $('#main-image')[0].naturalHeight;
+    var aspectRatio = naturalWidth / naturalHeight;
+    var containerWidth = $('#main-image-container').width();
+   
+    var scaleType = 'dynamic';
+    if(naturalWidth > 597 && naturalWidth < 603){
+        scaleType = 'width';
+        if(naturalHeight > 452){
+            scaleType = 'vertical-scroll';
+        }
+    } 
+    else if(naturalHeight > 447 && naturalHeight < 453){
+        scaleType = 'height';
+        if(naturalWidth > 602){
+            scaleType = 'horizontal-scroll';
+        }
+    }
+    
+    if(deviceType == 'desktop'){
+        containerWidth -= 350;
+        
+        if(scaleType == 'width'){
+            $('#main-image').css('width', containerWidth + 'px').css('max-width', '600px');
+            
+        }
+        if(scaleType == 'height'){
+            $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
+            
+        }
+    }
     if(deviceType == 'mobile'){
-
-        aspectRatio = $('#main-image').width() / $('#main-image').height();
 
         if(aspectRatio > 2){
             $('#main-image').css('height', '240px');
