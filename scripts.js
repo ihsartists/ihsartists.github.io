@@ -24,7 +24,7 @@ function loadPage(data){
         $('#page-container').append('<div class="year" id="year'+ i +'"><h2 class="year-name">'+ frontData.years[i].name +'</h2></div>');
 
         for(var j = 0; j < frontData.years[i][deviceType].length; j++){
-            $('#year'+ i).append('<div onclick="window.location = \'image/?a='+ frontData.years[i][deviceType][j] +'&g=0&i=0&t='+ frontData[frontData.years[i][deviceType][j]].name.split("'").join("\\'") +'\'" class="artist"><img class="artist-thumb" src="/images/artist-thumb--' + frontData.years[i][deviceType][j] + '.jpg"><div class="artist-bottom"><p class="artist-name">'+ frontData[frontData.years[i][deviceType][j]].name +'</p></div></button>');
+            $('#year'+ i).append('<div onclick="window.location = \'image/?a='+ frontData.years[i][deviceType][j] +'&g='+ frontData[frontData.years[i][deviceType][j]].link[0] +'&i='+ frontData[frontData.years[i][deviceType][j]].link[1] +'&t='+ frontData[frontData.years[i][deviceType][j]].name.split("'").join("\\'") +'\'" class="artist"><img class="artist-thumb" src="/images/artist-thumb--' + frontData.years[i][deviceType][j] + '.jpg"><div class="artist-bottom"><p class="artist-name">'+ frontData[frontData.years[i][deviceType][j]].name +'</p></div></button>');
             }
 
         if(deviceType == 'mobile'){
