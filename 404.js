@@ -17,7 +17,7 @@ if(window.innerWidth < 700){
 }
 
 $.get('/data/redirect-data.json', data => {
-    var findNewLocation = data['http://ihsartists.net' + window.location.pathname];
+    var findNewLocation = data[window.location.pathname];
     
     if(findNewLocation){
         if(findNewLocation.split('--')[0] == 'image'){
