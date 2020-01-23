@@ -14,10 +14,9 @@ if(window.innerWidth < 700){
     $('#title').css('margin-top', '20px');
 }
 
-function loadPage(data){
+function loadPage(frontData){
     $('#loader').css('display', 'none');
 
-    var frontData = JSON.parse(data);
     console.log(frontData);
     
     for(var i = Object.keys(frontData.years).length - 1; i > -1; i--){
@@ -38,16 +37,16 @@ function loadPage(data){
 
 if (typeof(Storage) !== "undefined") {
     if(sessionStorage.frontPage){
-        loadPage(sessionStorage.frontPage);
+        loadPage(JSON.parse(sessionStorage.frontPage));
     } else {
-        $.get('https://script.google.com/macros/s/AKfycbwTAO9B2U1gTxJtWDl2d0JUdQZlsRpC9a3Po3plc4ux-QWpYMs/exec', data => {
-            loadPage(data);
-            sessionStorage.frontPage = data;
+        $.get('/data/front-data.json', frontData => {
+            loadPage(frontData);
+            sessionStorage.frontPage = JSON.stringify(frontData);
             sessionStorage.frontPageExpire = new Date();
         });
     }
 } else {
-    $.get('https://script.google.com/macros/s/AKfycbwTAO9B2U1gTxJtWDl2d0JUdQZlsRpC9a3Po3plc4ux-QWpYMs/exec', data => {
+    $.get('/data/front-data.json', frontData => {
         loadPage(data);
     });
 }
