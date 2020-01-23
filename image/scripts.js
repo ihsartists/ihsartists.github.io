@@ -125,9 +125,9 @@ $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + 
     resizeImage();
 });
 
-function loadPage(data){
-    var artistData = JSON.parse(data.split("'").join("%39"));
-        console.log(artistData);
+function loadPage(artistData){
+        
+    console.log(artistData);
         
         $('#title').text(artistData.name.split("%39").join("'"));
         $('title').text(artistData.name.split("%39").join("'"));
@@ -163,17 +163,17 @@ function loadPage(data){
 
 if(artist){
     if (typeof(Storage) !== "undefined") {
-        if(sessionStorage['artist-' + artist]){
-            loadPage(sessionStorage['artist-' + artist]);
+        if(sessionStorage.artistData){
+            loadPage(JSON.parse(sessionStorage.artistData)[artist]);
         } else {
-            $.get('https://script.google.com/macros/s/AKfycbx1mPuNWZr6IMmiWw2SRfMxfchkWVHH2j6C9MZjz3TWlEuyzk8/exec?a=' + artist, data => {
-                loadPage(data);
-                sessionStorage['artist-' + artist] = data;
+            $.get('/data/artist-data.json', artistData => {
+                loadPage(artistData[artist]);
+                sessionStorage.artistData = JSON.stringify(artistData);
             });
         }
     } else {
-        $.get('https://script.google.com/macros/s/AKfycbx1mPuNWZr6IMmiWw2SRfMxfchkWVHH2j6C9MZjz3TWlEuyzk8/exec?a=' + artist, data => {
-            loadPage(data);
+        $.get('/data/artist-data.json', artistData => {
+            loadPage(artistData[artist]);
         });
     }
 } else {

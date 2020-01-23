@@ -36,13 +36,13 @@ function loadPage(frontData){
 }
 
 if (typeof(Storage) !== "undefined") {
-    if(sessionStorage.frontPage){
-        loadPage(JSON.parse(sessionStorage.frontPage));
+    if(sessionStorage.frontData){
+        loadPage(JSON.parse(sessionStorage.frontData));
     } else {
         $.get('/data/front-data.json', frontData => {
             loadPage(frontData);
-            sessionStorage.frontPage = JSON.stringify(frontData);
-            sessionStorage.frontPageExpire = new Date();
+            sessionStorage.frontData = JSON.stringify(frontData);
+            sessionStorage.frontDataExpire = new Date();
         });
     }
 } else {
