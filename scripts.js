@@ -24,7 +24,7 @@ function loadPage(frontData){
 
         for(var j = 0; j < frontData.years[i][deviceType].length; j++){
             $('#year'+ i).append('<div onclick="window.location = \'image/?a='+ frontData.years[i][deviceType][j] +'&g='+ frontData[frontData.years[i][deviceType][j]].link[0] +'&i='+ frontData[frontData.years[i][deviceType][j]].link[1] +'&t='+ frontData[frontData.years[i][deviceType][j]].name.split("'").join("\\'") +'\'" class="artist"><img class="artist-thumb" src="/images/artist-thumb--' + frontData.years[i][deviceType][j] + '.jpg"><div class="artist-bottom"><p class="artist-name">'+ frontData[frontData.years[i][deviceType][j]].name +'</p></div></button>');
-            }
+        }
 
         if(deviceType == 'mobile'){
             $('.artist').css('width', '31.33%').css('padding-top', '1.5%');
@@ -35,14 +35,25 @@ function loadPage(frontData){
     }
 }
 
+function preloadArtistData(){
+    if(sessionStorage.artistData){} else {
+        $.get('/data/artist-data.json', artistData => {
+            sessionStorage.artistData = JSON.stringify(artistData);
+            sessionStorage.artistDataExpire = new Date();
+        });
+    }
+}
+
 if (typeof(Storage) !== "undefined") {
     if(sessionStorage.frontData){
         loadPage(JSON.parse(sessionStorage.frontData));
+        preloadArtistData();
     } else {
         $.get('/data/front-data.json', frontData => {
             loadPage(frontData);
             sessionStorage.frontData = JSON.stringify(frontData);
             sessionStorage.frontDataExpire = new Date();
+            preloadArtistData();
         });
     }
 } else {
