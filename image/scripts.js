@@ -33,6 +33,8 @@ var artistName = $.urlParam('t');
 var gallery = $.urlParam('g');
 var image = $.urlParam('i');
 
+var desktopGalleryWidth = 350;
+
 if(artistName) {
     $('#title').text(artistName);
     $('title').text(artistName);
@@ -44,13 +46,13 @@ if(image){} else {
     image = 0;
 }
 
-function resizeImage() {
+function resizeImage(video) {
     
     var naturalWidth = $('#main-image')[0].naturalWidth;
     var naturalHeight = $('#main-image')[0].naturalHeight;
     var containerWidth = $('#main-image-container').width();
    
-    var scaleType = 'dynamic';
+    var scaleType = 'horizontal-scroll';
     if(naturalWidth > 596 && naturalWidth < 608){
         scaleType = 'width';
         if(naturalHeight > 457){
@@ -64,17 +66,13 @@ function resizeImage() {
         }
     }
     
-    console.log(scaleType);
-    
     if(deviceType == 'desktop'){
-        containerWidth -= 350;
+        containerWidth -= desktopGalleryWidth;
         
         if(scaleType == 'width'){
             $('#main-image').css('width', containerWidth + 'px').css('max-width', '600px');
-            
         }
         if(scaleType == 'height'){
-            console.log(containerWidth * (naturalHeight / naturalWidth))
             $('#main-image').css('height', containerWidth * (naturalHeight / naturalWidth) + 'px').css('max-height', '450px');
         }
         if(scaleType == 'vertical-scroll'){
@@ -85,9 +83,6 @@ function resizeImage() {
             $('#main-image-scroll-container').css('overflow-x', 'scroll');
             $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px');
             $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
-        }
-        if(scaleType == 'dynamic'){
-            
         }
     }
     if(deviceType == 'mobile'){
@@ -111,9 +106,6 @@ function resizeImage() {
             $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px');
             $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
         }
-        if(scaleType == 'dynamic'){
-            
-        }
     }
 }
 
@@ -128,37 +120,36 @@ $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + 
 function loadPage(artistData){
         
     console.log(artistData);
-        
-        $('#title').text(artistData.name.split("%39").join("'"));
-        $('title').text(artistData.name.split("%39").join("'"));
-        
-        if (history.pushState) {
-            var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?a=' + artist + '&g=' + gallery + '&i=' + image + '&t=' + artistData.name.replace("'", "\\'");
-            window.history.pushState({path:newurl},'',newurl);
-        }
-        
-        if(artistData.galleries[gallery].images[image].type == 'image'){
-            $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + image + '.jpg').on('load', () => {
-                
-                $('#loader').css('display', 'none');
-                $('#main-image-container').css('display', 'block');
+    $('#title').text(artistData.name.split("%39").join("'")); $('title').text(artistData.name.split("%39").join("'"));
 
-                resizeImage();
-            });
-        }
-        if(artistData.galleries[gallery].images[image].type == 'video'){
-            document.getElementById('main-image-scroll-container').outerHTML = '<iframe width="100%" height="300" src="' + artistData.galleries[gallery].images[image].embed + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-            
+    if (history.pushState) {
+        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?a=' + artist + '&g=' + gallery + '&i=' + image + '&t=' + artistData.name.replace("'", "\\'");
+        window.history.pushState({path:newurl},'',newurl);
+    }
+
+    if(artistData.galleries[gallery].images[image].type == 'image'){
+        $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + image + '.jpg').on('load', () => {
+
             $('#loader').css('display', 'none');
             $('#main-image-container').css('display', 'block');
-            
-            if(deviceType == 'mobile'){
-                $('#main-image-padding-container').css('max-width', 'width', 'calc(100% - 18px)');
-                $('#main-image-padding-container').width('100%');
-            } else {
-                $('#main-image-padding-container').width('50%');
-            }
+
+            resizeImage();
+        });
+    }
+    if(artistData.galleries[gallery].images[image].type == 'video'){
+        document.getElementById('main-image-scroll-container').outerHTML = '<iframe width="100%" height="100%" src="' + artistData.galleries[gallery].images[image].embed + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+
+        $('#loader').css('display', 'none');
+        $('#main-image-container').css('display', 'block');
+        
+        var containerWidth = $('#main-image-container').width();
+        if(deviceType == 'mobile'){
+            $('#main-image-padding-container').css('max-width','calc(100% - 18px)').width('100%').height(containerWidth * 0.5625);
+        } else {
+            containerWidth -= desktopGalleryWidth;
+            $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px').height(containerWidth * 0.5625).css('max-height', '337.5px');
         }
+    }
 }
 
 if(artist){
