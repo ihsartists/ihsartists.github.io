@@ -16,7 +16,7 @@ if(window.innerWidth < 700){
     $('#search-failed').css('margin-left', '4%').css('margin-top', '20px');
 }
 
-$.get('/redirect-data.json', data => {
+$.get('/data/redirect.json', data => {
     var findNewLocation = data['http://ihsartists.net' + window.location.pathname];
     
     if(findNewLocation){
