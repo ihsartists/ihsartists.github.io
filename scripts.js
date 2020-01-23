@@ -43,6 +43,7 @@ if (typeof(Storage) !== "undefined") {
         $.get('https://script.google.com/macros/s/AKfycbwTAO9B2U1gTxJtWDl2d0JUdQZlsRpC9a3Po3plc4ux-QWpYMs/exec', data => {
             loadPage(data);
             sessionStorage.frontPage = data;
+            sessionStorage.frontPageExpire = new Date();
         });
     }
 } else {

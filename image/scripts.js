@@ -86,6 +86,9 @@ function resizeImage() {
             $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px');
             $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
         }
+        if(scaleType == 'dynamic'){
+            
+        }
     }
     if(deviceType == 'mobile'){
         containerWidth -= 23;
@@ -107,6 +110,9 @@ function resizeImage() {
             $('#main-image-scroll-container').css('overflow-x', 'scroll');
             $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px');
             $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
+        }
+        if(scaleType == 'dynamic'){
+            
         }
     }
 }
