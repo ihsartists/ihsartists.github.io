@@ -1,24 +1,28 @@
 var deviceType = 'desktop';
-if(window.innerWidth < 1050){
-    $('#title-container').css('margin-top', '8px');
-}
-if(window.innerWidth < 900){
-    $('#title-container').css('margin-top', '3px');
-}
-if(window.innerWidth < 700){
-    deviceType = 'mobile';
-    
-    $('#title').css('font-size', '25px');
 
-    $('#title-container').css('margin-left', 'calc(4% + 4px)').css('margin-top', '0')
-    $('#title-container').css('width', 'calc(100% - 120px)');
-    
-    $('#home-button').css('margin-right', '4%').css('margin-left', '4%');
-    $('#home-button-container').css('position', 'absolute').css('right', 'calc(2% + 4px)').css('top', '25px').css('margin', '0');
-    
-    $('#main-image-padding-container').css('max-width', 'calc(100% - 18px)');
-    $('#main-image-container').css('width', 'calc(100% - 18px)').css('text-align', 'center').css('margin-left', '8px').css('margin-right', '8px').css('margin-top', '10px');
+function resizeWindow() {
+    if(window.innerWidth < 1050){
+        $('#title-container').css('margin-top', '8px');
+    }
+    if(window.innerWidth < 900){
+        $('#title-container').css('margin-top', '3px');
+    }
+    if(window.innerWidth < 700){
+        deviceType = 'mobile';
+
+        $('#title').css('font-size', '25px');
+
+        $('#title-container').css('margin-left', 'calc(4% + 4px)').css('margin-top', '0')
+        $('#title-container').css('width', 'calc(100% - 120px)');
+
+        $('#home-button').css('margin-right', '4%').css('margin-left', '4%');
+        $('#home-button-container').css('position', 'absolute').css('right', 'calc(2% + 4px)').css('top', '25px').css('margin', '0');
+
+        $('#main-image-padding-container').css('max-width', 'calc(100% - 18px)');
+        $('#main-image-container').css('width', 'calc(100% - 18px)').css('text-align', 'center').css('margin-left', '8px').css('margin-right', '8px').css('margin-top', '10px');
+    }
 }
+resizeWindow();
 
 $.urlParam = function(name){
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);

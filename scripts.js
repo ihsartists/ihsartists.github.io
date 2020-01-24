@@ -1,18 +1,22 @@
 var deviceType = 'desktop';
-if(window.innerWidth < 1050){
-    $('#title').css('margin-top', '30px');
+
+function resizeWindow(){
+    if(window.innerWidth < 1050){
+        $('#title').css('margin-top', '30px');
+    }
+    if(window.innerWidth < 900){
+        $('#title').css('margin-top', '25px');
+    }
+    if(window.innerWidth < 700){
+        deviceType = 'mobile';
+        $('#title').css('margin-left', '4%');
+        $('#search-failed').css('margin-left', 'calc(4% + 15px)');
+        $('#search-input').css('margin-right', '4%').css('margin-left', '4%');
+        $('#search-cancel').css('right', 'calc(4% + 10px)');
+        $('#title').css('margin-top', '20px');
+    }
 }
-if(window.innerWidth < 900){
-    $('#title').css('margin-top', '25px');
-}
-if(window.innerWidth < 700){
-    deviceType = 'mobile';
-    $('#title').css('margin-left', '4%');
-    $('#search-failed').css('margin-left', 'calc(4% + 15px)');
-    $('#search-input').css('margin-right', '4%').css('margin-left', '4%');
-    $('#search-cancel').css('right', 'calc(4% + 10px)');
-    $('#title').css('margin-top', '20px');
-}
+resizeWindow();
 
 function loadPage(frontData){
     $('#loader').css('display', 'none');
