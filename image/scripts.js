@@ -167,8 +167,23 @@ function loadPage(artistData){
         });
     }
    
-    for(var i = 0; i < artistData.galleries[gallery].desktop.length; i++){
-        $('#gallery-container').append("<img class='gallery-image' src='/images/image-thumb--" + artist + "-" + gallery + "-" + artistData.galleries[gallery].desktop[i] + ".jpg' onclick='window.location=\"/image/?a=" + artist + "&g=" + gallery + "&i=" + artistData.galleries[gallery].desktop[i] + "&t=" + $.urlParam('t') + "\"'>");
+    for(var i = 0; i < artistData.galleries[gallery].order.length; i++){
+        $('#gallery-container').append("<img class='gallery-image' src='/images/image-thumb--" + artist + "-" + gallery + "-" + artistData.galleries[gallery].order[i] + ".jpg' onclick='window.location=\"/image/?a=" + artist + "&g=" + gallery + "&i=" + artistData.galleries[gallery].order[i] + "&t=" + $.urlParam('t') + "\"'>");
+    }
+    
+    if(deviceType == 'desktop'){
+        $('#gallery-container').css('height', $('#gallery-container').width() * 0.75 + 'px');
+        $('.gallery-image').css('height', ($('#gallery-container').width() / 4 - 4) + 'px');
+    } else {
+        $('#gallery-container').css('text-align', 'left');
+    }
+    
+    for(var i = 0; i < Object.keys(artistData.galleries).length; i++){
+        if(i == gallery) {
+           $('#gallery-navigator-text').append('<b class="gallery-navigator-tab" id="gallery-navigator-tab--current">' + artistData.galleries[i].name + '</b>');
+        } else {
+            $('#gallery-navigator-text').append('<b class="gallery-navigator-tab" onclick="window.location=\'/image/?a=' + artist + "&g=" + i + "&i=" + artistData.galleries[i].order[0] + "&t=" + $.urlParam('t') + '\'">' + artistData.galleries[i].name + '</b>');
+        }
     }
     
     if(artistData.galleries[gallery].images[image].type == 'video'){
