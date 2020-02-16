@@ -1,6 +1,6 @@
 var deviceType = 'desktop';
 
-var desktopGalleryWidth = 340;
+var desktopGalleryWidth = 345;
 var maxMobileWidth = 370;
 
 function resizeWindow() {
@@ -66,7 +66,7 @@ function resizeImage() {
     var naturalHeight = $('#main-image')[0].naturalHeight;
     var containerWidth = $('#main-image-container').width();
    
-    var scaleType = 'width';
+    var scaleType = 'dynamic';
     if(naturalWidth > 594 && naturalWidth < 608){
         scaleType = 'width';
         if(naturalHeight > 457){
@@ -77,6 +77,18 @@ function resizeImage() {
         scaleType = 'height';
         if(naturalWidth > 607){
             scaleType = 'horizontal-scroll';
+        }
+    }
+    
+    if(scaleType == 'dynamic'){
+        if(naturalHeight > 0.75 * naturalWidth){
+            naturalWidth = (naturalWidth / naturalHeight) * 450;
+            naturalHeight = 450;
+            scaleType = 'height';
+        } else {
+            naturalHeight = (naturalHeight / naturalWidth) * 600;
+            naturalWidth = 600;
+            scaleType = 'width';
         }
     }
     
@@ -107,7 +119,6 @@ function resizeImage() {
         }
         if($('#main-image-container').height() < 510){
             $('#main-image-container').css('margin-top', (510 - $('#main-image-padding-container').height()) + 'px');
-            console.log(parseInt($('#main-image-container').css('margin-top')));
             if(parseInt($('#main-image-container').css('margin-top')) < 50){
                 $('#main-image-container').css('margin-top', '50px');
             }
@@ -201,7 +212,6 @@ function loadPage(artistData){
             $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px').height(containerWidth * 0.5625).css('max-height', '337.5px');
             
             if($('#main-image-container').height() < 510){
-                console.log($('#main-image-container').height() );
                 $('#main-image-container').css('margin-top', (510 - $('#main-image-padding-container').height()) + 'px');
                 
                 if(parseInt($('#main-image-container').css('margin-top')) < 50){

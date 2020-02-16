@@ -121,5 +121,9 @@ body {
     background: #e0e0e0;
 }
 #gallery-navigator-tab--current {
-    background: #e0e0e0;
+    background: #9e9e9e;
+    color: white;
+}
+#gallery-navigator-tab--current:hover {
+    cursor: default;
 }
