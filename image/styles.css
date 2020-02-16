@@ -60,6 +60,7 @@ body {
     background: white;
     padding: 10px;
     margin-bottom: -5px;
+    position: relative;
 }
 #main-image-scroll-container {
     overflow: none;
@@ -67,7 +68,58 @@ body {
 #main-image {
     margin-bottom: -5px;
 }
+#gallery-center-container {
+    width: 100%;
+    text-align: left;
+}
+#gallery-container {
+    position: relative;
+    margin-left: 2%;
+    width: calc(100% - 37px);
+    top: -206px;
+    max-width: 260px;
+    background: white;
+    padding: 8px;
+    font-size: 0;
+    display: none;
+}
+.gallery-image {
+    display: inline-block;
+    width: calc(25% - 4px);
+    padding: 2px;
+}
+.gallery-image:hover {
+    cursor: pointer;
+}
 #loader {
     text-align: center;
     margin-top: -75px;
+}
+#gallery-navigator {
+    position: relative;
+    margin-top: 15px;
+    margin-left: 2%;
+    margin-bottom: -60px;
+}
+#gallery-navigator-text {
+    color: #616161;
+    font-size: 20px;
+}
+.gallery-navigator-tab {
+    padding: 4px;
+    padding-right: 8px;
+    padding-left: 8px;
+    margin-left: 4px;
+    margin-right: 4px;
+    background: white;
+    color: #757575;
+    -webkit-transition: background 0.3s, width 0.5s;
+    transition: background 0.3s, width 0.5s;
+}
+.gallery-navigator-tab:hover {
+    cursor: pointer;
+    background: #e0e0e0;
+}
+#gallery-navigator-tab--current {
+    background: #e0e0e0;
 }

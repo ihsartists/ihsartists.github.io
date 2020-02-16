@@ -1,5 +1,7 @@
 var deviceType = 'desktop';
 
+var maxMobileWidth = 370;
+
 function resizeWindow(){
     if(window.innerWidth < 1050){
         $('#title').css('margin-top', '30px');
@@ -10,10 +12,16 @@ function resizeWindow(){
     if(window.innerWidth < 700){
         deviceType = 'mobile';
         $('#title').css('margin-left', '4%');
-        $('#search-failed').css('margin-left', 'calc(4% + 15px)');
-        $('#search-input').css('margin-right', '4%').css('margin-left', '4%');
+        $('#search-failed').css('margin-left', '25px');
+        $('#search-input').css('margin-right', '10px').css('margin-left', '10px');
         $('#search-cancel').css('right', 'calc(4% + 10px)');
         $('#title').css('margin-top', '20px');
+        
+        $('#page-container').css('max-width', maxMobileWidth + 'px').css('margin-top', '5px');
+        
+        if(window.innerWidth < 395){
+            $('#page-container').css('margin-top', '0px');
+        }
     }
 }
 resizeWindow();

@@ -1,5 +1,8 @@
 var deviceType = 'desktop';
 
+var desktopGalleryWidth = 340;
+var maxMobileWidth = 370;
+
 function resizeWindow() {
     if(window.innerWidth < 1050){
         $('#title-container').css('margin-top', '8px');
@@ -12,14 +15,23 @@ function resizeWindow() {
 
         $('#title').css('font-size', '25px');
 
-        $('#title-container').css('margin-left', 'calc(4% + 4px)').css('margin-top', '0')
+        $('#title-container').css('margin-left', '18px').css('margin-top', '0')
         $('#title-container').css('width', 'calc(100% - 120px)');
 
-        $('#home-button').css('margin-right', '4%').css('margin-left', '4%');
-        $('#home-button-container').css('position', 'absolute').css('right', 'calc(2% + 4px)').css('top', '25px').css('margin', '0');
+        $('#home-button').css('margin-right', '10px').css('margin-left', '10%');
+        $('#home-button-container').css('margin-bottom', '30px').css('top', '10px');
 
         $('#main-image-padding-container').css('max-width', 'calc(100% - 18px)');
         $('#main-image-container').css('width', 'calc(100% - 18px)').css('text-align', 'center').css('margin-left', '8px').css('margin-right', '8px').css('margin-top', '10px');
+        
+        $('#gallery-container').css('top', '18px').css('margin', '10px').css('max-width', maxMobileWidth + 'px');
+        $('#gallery-center-container').css('text-align', 'center');
+        
+        $('#page-container').css('max-width', maxMobileWidth + 'px').css('margin-top', '5px');
+        
+        if(window.innerWidth < 395){
+            $('#page-container').css('margin-top', '0px');
+        }
     }
 }
 resizeWindow();
@@ -36,8 +48,6 @@ var artist = $.urlParam('a');
 var artistName = $.urlParam('t');
 var gallery = $.urlParam('g');
 var image = $.urlParam('i');
-
-var desktopGalleryWidth = 350;
 
 if(artistName) {
     $('#title').text(artistName);
@@ -88,16 +98,33 @@ function resizeImage() {
             $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px');
             $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
         }
+        
+        if($('#main-image').height() < containerWidth * 0.75){
+            $('#main-image-container').css('margin-top', (containerWidth * 0.75 - $('#main-image').height()) + 'px');
+            if(parseInt($('#main-image-container').css('margin-top')) < 50){
+                $('#main-image-container').css('margin-top', '50px');
+            }
+        }
+        if($('#main-image-container').height() < 510){
+            $('#main-image-container').css('margin-top', (510 - $('#main-image-padding-container').height()) + 'px');
+            console.log(parseInt($('#main-image-container').css('margin-top')));
+            if(parseInt($('#main-image-container').css('margin-top')) < 50){
+                $('#main-image-container').css('margin-top', '50px');
+            }
+        }
     }
     if(deviceType == 'mobile'){
         containerWidth -= 23;
+        if(containerWidth > maxMobileWidth){
+            containerWidth = maxMobileWidth;
+        }
         
         if(scaleType == 'width'){
-            $('#main-image').css('width', containerWidth + 'px').css('max-width', '600px');
+            $('#main-image').css('width', containerWidth + 'px');
         }
         if(scaleType == 'height'){
-            $('#main-image').css('height', '450px').css('max-width', containerWidth + 'px');
-            if($('#main-image').width() == containerWidth){
+            $('#main-image').css('max-width', containerWidth + 'px').css('height', '450px');
+            if($('#main-image').width() == maxMobileWidth || $('#main-image').width() == $('#main-image-container').width() - 23){
                 $('#main-image').css({height: ''});
             }
         }
@@ -107,7 +134,7 @@ function resizeImage() {
         }
         if(scaleType == 'horizontal-scroll'){
             $('#main-image-scroll-container').css('overflow-x', 'scroll');
-            $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px');
+            $('#main-image-padding-container').css('width', containerWidth + 'px');
             $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
         }
     }
@@ -117,6 +144,7 @@ $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + 
                 
     $('#loader').css('display', 'none');
     $('#main-image-container').css('display', 'block');
+    $('#gallery-container').css('display', 'inline-block');
     
     resizeImage();
 });
@@ -130,21 +158,25 @@ function loadPage(artistData){
         var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?a=' + artist + '&g=' + gallery + '&i=' + image + '&t=' + artistData.name.replace("'", "\\'");
         window.history.pushState({path:newurl},'',newurl);
     }
-
     if(artistData.galleries[gallery].images[image].type == 'image'){
         $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + image + '.jpg').on('load', () => {
-
             $('#loader').css('display', 'none');
             $('#main-image-container').css('display', 'block');
 
             resizeImage();
         });
     }
+   
+    for(var i = 0; i < artistData.galleries[gallery].desktop.length; i++){
+        $('#gallery-container').append("<img class='gallery-image' src='/images/image-thumb--" + artist + "-" + gallery + "-" + artistData.galleries[gallery].desktop[i] + ".jpg' onclick='window.location=\"/image/?a=" + artist + "&g=" + gallery + "&i=" + artistData.galleries[gallery].desktop[i] + "&t=" + $.urlParam('t') + "\"'>");
+    }
+    
     if(artistData.galleries[gallery].images[image].type == 'video'){
         document.getElementById('main-image-scroll-container').outerHTML = '<iframe width="100%" height="100%" src="' + artistData.galleries[gallery].images[image].embed + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
 
         $('#loader').css('display', 'none');
         $('#main-image-container').css('display', 'block');
+        $('#gallery-container').css('display', 'inline-block');
         
         var containerWidth = $('#main-image-container').width();
         if(deviceType == 'mobile'){
@@ -152,6 +184,15 @@ function loadPage(artistData){
         } else {
             containerWidth -= desktopGalleryWidth;
             $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px').height(containerWidth * 0.5625).css('max-height', '337.5px');
+            
+            if($('#main-image-container').height() < 510){
+                console.log($('#main-image-container').height() );
+                $('#main-image-container').css('margin-top', (510 - $('#main-image-padding-container').height()) + 'px');
+                
+                if(parseInt($('#main-image-container').css('margin-top')) < 50){
+                    $('#main-image-container').css('margin-top', '50px');
+                }
+            }
         }
     }
 }
