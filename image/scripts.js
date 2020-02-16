@@ -2,6 +2,7 @@ var deviceType = 'desktop';
 
 var desktopGalleryWidth = 345;
 var maxMobileWidth = 370;
+var desktopPageHeight = 470;
 
 function resizeWindow() {
     if(window.innerWidth < 1050){
@@ -113,14 +114,14 @@ function resizeImage() {
         
         if($('#main-image').height() < containerWidth * 0.75){
             $('#main-image-container').css('margin-top', (containerWidth * 0.75 - $('#main-image').height()) + 'px');
-            if(parseInt($('#main-image-container').css('margin-top')) < 50){
-                $('#main-image-container').css('margin-top', '50px');
+            if(parseInt($('#main-image-container').css('margin-top')) < 50 - (510 - desktopPageHeight)){
+                $('#main-image-container').css('margin-top', (50 - (510 - desktopPageHeight)) + 'px');
             }
         }
-        if($('#main-image-container').height() < 510){
-            $('#main-image-container').css('margin-top', (510 - $('#main-image-padding-container').height()) + 'px');
-            if(parseInt($('#main-image-container').css('margin-top')) < 50){
-                $('#main-image-container').css('margin-top', '50px');
+        if($('#main-image-container').height() < desktopPageHeight){
+            $('#main-image-container').css('margin-top', (desktopPageHeight - $('#main-image-padding-container').height()) + 'px');
+            if(parseInt($('#main-image-container').css('margin-top')) < 50 - (510 - desktopPageHeight)){
+                $('#main-image-container').css('margin-top', (50 - (510 - desktopPageHeight)) + 'px');
             }
         }
     }
@@ -211,11 +212,11 @@ function loadPage(artistData){
             containerWidth -= desktopGalleryWidth;
             $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px').height(containerWidth * 0.5625).css('max-height', '337.5px');
             
-            if($('#main-image-container').height() < 510){
-                $('#main-image-container').css('margin-top', (510 - $('#main-image-padding-container').height()) + 'px');
+            if($('#main-image-container').height() < desktopPageHeight){
+                $('#main-image-container').css('margin-top', (desktopPageHeight - $('#main-image-padding-container').height()) + 'px');
                 
-                if(parseInt($('#main-image-container').css('margin-top')) < 50){
-                    $('#main-image-container').css('margin-top', '50px');
+                if(parseInt($('#main-image-container').css('margin-top')) < 50 - (510 - desktopPageHeight)){
+                    $('#main-image-container').css('margin-top', (50 - (510 - desktopPageHeight)) + 'px');
                 }
             }
         }
