@@ -180,7 +180,8 @@ function loadPage(artistData){
     }
    
     for(var i = 0; i < artistData.galleries[gallery].order.length; i++){
-        $('#gallery-container').append("<img class='gallery-image' src='/images/image-thumb--" + artist + "-" + gallery + "-" + artistData.galleries[gallery].order[i] + ".jpg' onclick='window.location=\"/image/?a=" + artist + "&g=" + gallery + "&i=" + artistData.galleries[gallery].order[i] + "&t=" + $.urlParam('t') + "\"'>");
+        $('#gallery-container').append('<img class="gallery-image" src="/images/image-thumb--' + artist + '-' + gallery + '-' + artistData.galleries[gallery].order[i] + '.jpg" onclick="window.location=\'/image/?a=' + artist + '&g=' + gallery + '&i=' + artistData.galleries[gallery].order[i] + '&t=' + $.urlParam("t") + '\'">');
+        
     }
     
     if(deviceType == 'desktop'){
