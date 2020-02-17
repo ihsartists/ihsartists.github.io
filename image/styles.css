@@ -154,6 +154,17 @@ body {
     width: 100%;
     height: 100%;
 }
+#overlay-close {
+    position: fixed;
+    right: 30px;
+    top: 30px;
+    font-size: 50px;
+    color: #616161;
+}
+#overlay-close:hover {
+    cursor: pointer;
+    color: #9e9e9e;
+}
 #statement-container {
     left: 0;
     display: none;
