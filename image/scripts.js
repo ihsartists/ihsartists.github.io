@@ -76,8 +76,6 @@ function viewStatement(){
     $('#page-container').css('filter', 'blur(4px)');
     $('body').css('height', '100%').css('overflow', 'hidden');
     
-    console.log($('#statement').height());
-    
     if(deviceType == 'mobile'){
         statementPadding = statementMobilePadding;
     }
@@ -159,7 +157,6 @@ function resizeImage() {
             scaleType = 'width';
         }
     }
-    
     if(deviceType == 'desktop'){
         containerWidth -= desktopGalleryWidth;
         
@@ -217,6 +214,10 @@ function resizeImage() {
             $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
         }
     }
+    
+    $("#image-zoom-box").html('');
+    $("#main-image-padding-container").clone().appendTo("#image-zoom-box");
+    
 }
 
 $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + image + '.jpg').on('load', () => {
@@ -341,6 +342,33 @@ if(artist){
     window.location = '/';
 }
 
+function collapseImage(){
+    $('#overlay').css('display', 'none');
+    $('#image-zoom-container').css('display', 'none');
+    $('#page-container').css('filter', 'none');
+    $('body').css('height', '100%').css('overflow', 'scroll');
+}
 function expandImage(){
     
+    $('#overlay').css('display', 'block');
+    $('#image-zoom-container').css('display', 'block');
+    $('#page-container').css('filter', 'blur(4px)');
+    $('body').css('height', '100%').css('overflow', 'hidden');
+    
+    if(deviceType == 'mobile'){
+        statementPadding = statementMobilePadding;
+    }
+    
+    if($('#main-image-padding-container').height() > $('#image-zoom-container').height() - statementPadding){
+        $('#image-zoom-box').css('height', '100%');
+    } else {
+        $('#image-zoom-box').css('margin-top', ($('#image-zoom-container').height() - $('#main-image-padding-container').height()) / 2);
+    }
+    
+    $(document).mouseup(function(e) {
+        var container = $('#image-zoom-box');
+        if (!container.is(e.target) && container.has(e.target).length == 0){
+            collapseImage();
+        }
+    });
 }
