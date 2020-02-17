@@ -7,6 +7,10 @@ var statementPadding = 120;
 var statementMobilePadding = 60;
 
 function resizeWindow() {
+    
+    var today = new Date();
+    $('#footer').html($('#footer').html().split('**YEAR**').join(today.getFullYear().toString()));
+    
     if(window.innerWidth < 1050){
         $('#title-container').css('margin-top', '8px');
     }
@@ -27,6 +31,8 @@ function resizeWindow() {
         $('#main-image-padding-container').css('max-width', 'calc(100% - 18px)');
         $('#main-image-container').css('width', 'calc(100% - 18px)').css('text-align', 'center').css('margin-left', '8px').css('margin-right', '8px').css('margin-top', '10px');
         
+        $('#image-description').css('width', 'calc(100% - 30px)').css('margin-left', '15px').css('margin-right', '15px');
+        
         $('#gallery-navigator').css('margin-top', '30px').css('margin-left', '25px');
         $('#statement-button').css('margin-left', '25px');
         
@@ -39,6 +45,8 @@ function resizeWindow() {
         $('#statement').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px').css('font-size', '16px');
         
         $('#overlay-close').css('font-size', '32px').css('right', '30px').css('top', '30px').css('background', 'white');
+        
+        $('#footer').css('margin-top', '70px').css('margin-bottom', '40px').css('margin-left', '15px');
         
         if(window.innerWidth < 395){
             $('#page-container').css('margin-top', '0px');
@@ -216,6 +224,7 @@ $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + 
     $('#loader').css('display', 'none');
     $('#main-image-container').css('display', 'block');
     $('#gallery-container').css('display', 'inline-block');
+    $('#footer').css('display', 'block');
     
     resizeImage();
 });
@@ -232,6 +241,11 @@ function loadPage(artistData){
             newurl += '&s=true';
         }
         window.history.pushState({path:newurl},'',newurl);
+    }
+    
+    $('#image-description').text(artistData.galleries[gallery].images[image].name);
+    if(deviceType == 'desktop'){
+        $('#gallery-navigator').css('margin-top', '-' + ($('#image-description').height() + 532) + 'px');
     }
     
     if(artistData.statement.type == 'text'){
@@ -276,6 +290,7 @@ function loadPage(artistData){
         $('#loader').css('display', 'none');
         $('#main-image-container').css('display', 'block');
         $('#gallery-container').css('display', 'inline-block');
+        $('#footer').css('display', 'block');
         
         var containerWidth = $('#main-image-container').width();
         if(deviceType == 'mobile'){
