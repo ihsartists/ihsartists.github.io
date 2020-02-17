@@ -26,7 +26,7 @@
             <div id='main-image-container'>
                 <div id='main-image-padding-container'>
                     <div id='main-image-scroll-container'>
-                        <img id='main-image' src=''>
+                        <img id='main-image' onclick='expandImage()' src=''>
                     </div>
                 </div>
             </div>
@@ -35,6 +35,15 @@
                 </div>
             </div>
         </div>
+        
+        <div id='overlay'></div>
+        
+        <div id='statement-container'>
+            <div id='statement-box'>
+                <div id='statement'></div>
+            </div>
+        </div>
+        
         <br><img id="loader" src ="/images/loader.gif">
         
         <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>

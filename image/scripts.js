@@ -3,6 +3,8 @@ var deviceType = 'desktop';
 var desktopGalleryWidth = 345;
 var maxMobileWidth = 370;
 var desktopPageHeight = 470;
+var statementPadding = 120;
+var statementMobilePadding = 80;
 
 function resizeWindow() {
     if(window.innerWidth < 1050){
@@ -30,12 +32,63 @@ function resizeWindow() {
         
         $('#page-container').css('max-width', maxMobileWidth + 'px').css('margin-top', '5px');
         
+        $('#statement-box').css('padding', statementMobilePadding / 2 + 'px').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px').css('width', 'calc(100% - ' + (statementMobilePadding / 2 + 30) + 'px)').css('margin', '15px');
+        $('#statement').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px');
+        
         if(window.innerWidth < 395){
             $('#page-container').css('margin-top', '0px');
         }
     }
 }
+
 resizeWindow();
+
+function hideStatement(){
+    $('#overlay').css('display', 'none');
+    $('#statement-container').css('display', 'none');
+    $('#page-container').css('filter', 'none');
+    $('body').css('height', '100%').css('overflow', 'scroll');
+    
+    if (history.pushState) {
+        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?a=' + artist + '&g=' + gallery + '&i=' + image + '&t=' + $.urlParam('t');
+        window.history.pushState({path:newurl},'',newurl);
+    }
+    
+    statement = null;
+}
+function viewStatement(){
+    
+    $('#overlay').css('display', 'block');
+    $('#statement-container').css('display', 'block');
+    $('#page-container').css('filter', 'blur(4px)');
+    $('body').css('height', '100%').css('overflow', 'hidden');
+    
+    console.log($('#statement').height());
+    
+    if(deviceType == 'mobile'){
+        statementPadding = statementMobilePadding;
+    }
+    
+    if($('#statement').height() > $('#statement-container').height() - statementPadding){
+        $('#statement-box').css('height', 'calc(100% - ' + statementPadding + 'px)');
+    } else {
+        $('#statement-box').css('margin-top', ($('#statement-container').height() - $('#statement').height() - statementPadding) / 2);
+    }
+    
+    $(document).mouseup(function(e) {
+        var container = $('#statement-box');
+        if (!container.is(e.target) && container.has(e.target).length == 0){
+            hideStatement();
+        }
+    });
+    
+    if (history.pushState) {
+        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?a=' + artist + '&g=' + gallery + '&i=' + image + '&t=' + $.urlParam('t') + '&s=true';
+        window.history.pushState({path:newurl},'',newurl);
+    }
+    
+    statement = true;
+}
 
 $.urlParam = function(name){
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -49,6 +102,7 @@ var artist = $.urlParam('a');
 var artistName = $.urlParam('t');
 var gallery = $.urlParam('g');
 var image = $.urlParam('i');
+var statement = $.urlParam('s');
 
 if(artistName) {
     $('#title').text(artistName);
@@ -168,8 +222,21 @@ function loadPage(artistData){
 
     if (history.pushState) {
         var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?a=' + artist + '&g=' + gallery + '&i=' + image + '&t=' + artistData.name.replace("'", "\\'");
+        
+        if(statement == true){
+            newurl += '&s=true';
+        }
         window.history.pushState({path:newurl},'',newurl);
     }
+    
+    if(artistData.statement.type == 'text'){
+        $('#statement').html(artistData.statement.content.split('\n').join('<br>'));
+    }
+    
+    if(statement){
+        viewStatement();
+    }
+    
     if(artistData.galleries[gallery].images[image].type == 'image'){
         $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + image + '.jpg').on('load', () => {
             $('#loader').css('display', 'none');
@@ -181,7 +248,6 @@ function loadPage(artistData){
    
     for(var i = 0; i < artistData.galleries[gallery].order.length; i++){
         $('#gallery-container').append('<img class="gallery-image" src="/images/image-thumb--' + artist + '-' + gallery + '-' + artistData.galleries[gallery].order[i] + '.jpg" onclick="window.location=\'/image/?a=' + artist + '&g=' + gallery + '&i=' + artistData.galleries[gallery].order[i] + '&t=' + $.urlParam("t") + '\'">');
-        
     }
     
     if(deviceType == 'desktop'){
@@ -253,4 +319,8 @@ if(artist){
     }
 } else {
     window.location = '/';
+}
+
+function expandImage(){
+    
 }
