@@ -51,7 +51,7 @@ function loadPage(frontData){
     $('#footer').html($('#footer').html().split('**YEAR**').join(today.getFullYear().toString()));
     
     if(deviceType == 'mobile'){
-        $('#footer').css('margin-top', '70px').css('margin-bottom', '40px').css('margin-left', '15px').css('margin-right', '15px');
+        $('#footer').css('margin-left', '15px').css('margin-right', '15px');
     }
 }
 
@@ -84,6 +84,7 @@ if (typeof(Storage) !== "undefined") {
 
 function expandSearch() {
     $('#search-input').removeClass('material-icons').attr('onclick', '').css('background', '#e0e0e0').attr('readOnly', false);
+    
     if($('#search-input').val() == 'search'){
         $('#search-input').val('');
     }
@@ -107,6 +108,7 @@ function clearSearch() {
 $('#search-input').focusout(function() {
     if($('#search-input').val().length == 0 || $('#search-input').val() == 'search'){
         $('#search-input').addClass('material-icons').attr('onclick', 'expandSearch()').val('search').css('width', '50px').css('background', 'white').attr('readOnly', false);
+        
     } else {
         $('#search-input').focus().attr('onclick', 'expandSearch()').attr('readOnly', true);
     }

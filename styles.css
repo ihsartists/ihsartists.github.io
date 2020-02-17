@@ -119,8 +119,8 @@ textarea, select, input, button { outline: none; }
     padding-right: 8%;
 }
 #footer {
-    margin-top: 90px;
-    margin-bottom: 70px;
+    margin-top: 70px;
+    margin-bottom: 20px;
     margin-left: 2%;
     padding: 10px;
 }
