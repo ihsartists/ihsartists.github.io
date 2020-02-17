@@ -76,7 +76,7 @@ body {
     position: relative;
     margin-left: 2%;
     width: calc(100% - 37px);
-    top: -206px;
+    margin-top: 219px;
     max-width: 260px;
     background: white;
     padding: 8px;
@@ -97,9 +97,8 @@ body {
 }
 #gallery-navigator {
     position: relative;
-    margin-top: 15px;
+    margin-top: -515px;
     margin-left: 2%;
-    margin-bottom: -60px;
 }
 #gallery-navigator-text {
     color: #616161;
@@ -128,10 +127,9 @@ body {
 #gallery-navigator-tab--current:hover {
     cursor: default;
 }
-.statement-button {
+#statement-button {
     display: inline-block;
     position: relative;
-    top: 60px;
     margin-left: 2%;
     font-size: 18px;
     padding: 4px;
@@ -142,7 +140,7 @@ body {
     -webkit-transition: background 0.3s, width 0.5s;
     transition: background 0.3s, width 0.5s;
 }
-.statement-button:hover {
+#statement-button:hover {
     cursor: pointer;
     background: #e0e0e0;
 }

@@ -2,9 +2,9 @@ var deviceType = 'desktop';
 
 var desktopGalleryWidth = 345;
 var maxMobileWidth = 370;
-var desktopPageHeight = 470;
+var desktopPageHeight = 500;
 var statementPadding = 120;
-var statementMobilePadding = 80;
+var statementMobilePadding = 60;
 
 function resizeWindow() {
     if(window.innerWidth < 1050){
@@ -27,13 +27,16 @@ function resizeWindow() {
         $('#main-image-padding-container').css('max-width', 'calc(100% - 18px)');
         $('#main-image-container').css('width', 'calc(100% - 18px)').css('text-align', 'center').css('margin-left', '8px').css('margin-right', '8px').css('margin-top', '10px');
         
+        $('#gallery-navigator').css('margin-top', '30px').css('margin-left', '25px');
+        $('#statement-button').css('margin-left', '25px');
+        
         $('#gallery-container').css('top', '18px').css('margin', '10px').css('max-width', maxMobileWidth + 'px');
         $('#gallery-center-container').css('text-align', 'center');
         
         $('#page-container').css('max-width', maxMobileWidth + 'px').css('margin-top', '5px');
         
-        $('#statement-box').css('padding', statementMobilePadding / 2 + 'px').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px').css('width', 'calc(100% - ' + (statementMobilePadding / 2 + 30) + 'px)').css('margin', '15px');
-        $('#statement').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px');
+        $('#statement-box').css('padding', statementMobilePadding / 2 + 'px').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px').css('width', 'calc(100% - ' + (statementMobilePadding / 2 + 30) + 'px)').css('margin-left', '15px').css('margin-right', '15px');
+        $('#statement').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px').css('font-size', '16px');
         
         if(window.innerWidth < 395){
             $('#page-container').css('margin-top', '0px');
