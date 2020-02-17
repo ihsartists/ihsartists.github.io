@@ -45,13 +45,13 @@ function loadPage(frontData){
             $('.artist-bottom').css('height', '43px');
         }
     }
-    $('#page-container').append("<div id='footer'><span id='footer-text'>© Copyright **YEAR**, All Rights Reserved<br><br>Website built and programmed by Josh Chang.<br><a href='mailto:joshchang04@gmail.com' class='footer-link'>Need help with a project of your own?</a></span></div>");
+    $('#page-container').append("<div id='footer'><span id='footer-text'>© Copyright **YEAR**, All Rights Reserved<br><br>Website designed and coded by Josh Chang. <a href='mailto:joshchang04@gmail.com' class='footer-link'>Need help with a project of your own?</a></span></div>");
     
     var today = new Date();
     $('#footer').html($('#footer').html().split('**YEAR**').join(today.getFullYear().toString()));
     
     if(deviceType == 'mobile'){
-        $('#footer').css('margin-top', '70px').css('margin-bottom', '40px').css('margin-left', '15px');
+        $('#footer').css('margin-top', '70px').css('margin-bottom', '40px').css('margin-left', '15px').css('margin-right', '15px');
     }
 }
 

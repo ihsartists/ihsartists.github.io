@@ -46,7 +46,7 @@ function resizeWindow() {
         
         $('#overlay-close').css('font-size', '32px').css('right', '30px').css('top', '30px').css('background', 'white');
         
-        $('#footer').css('margin-top', '70px').css('margin-bottom', '40px').css('margin-left', '15px');
+        $('#footer').css('margin-top', '70px').css('margin-bottom', '40px').css('margin-left', '15px').css('margin-right', '15px');
         
         if(window.innerWidth < 395){
             $('#page-container').css('margin-top', '0px');
