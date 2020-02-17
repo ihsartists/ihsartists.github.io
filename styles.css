@@ -64,7 +64,7 @@ body {
 #search-input:focus {
     background: #e0e0e0;
     text-align: left;
-    padding-left: 10px;
+    padding-left: 11px;
     font-size: 15px;
     color: #616161;
 }
