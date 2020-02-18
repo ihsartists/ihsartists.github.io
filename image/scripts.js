@@ -233,8 +233,21 @@ $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + 
 });
 
 function loadPage(artistData){
-        
-    console.log(artistData);
+    
+    if(artistData){
+        if(artistData.galleries[gallery]){
+            if(artistData.galleries[gallery].images[image]){
+                console.log(artistData);
+            } else {
+                window.location = '/404.html';
+            }
+        } else {
+            window.location = '/404.html';
+        }
+    } else {
+        window.location = '/404.html';
+    }
+    
     $('#title').text(artistData.name.split("%39").join("'")); $('title').text(artistData.name.split("%39").join("'"));
 
     if (history.pushState) {
@@ -350,7 +363,7 @@ if(artist){
         });
     }
 } else {
-    window.location = '/';
+    window.location = '/404.html';
 }
 
 function collapseImage(){
