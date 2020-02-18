@@ -44,7 +44,7 @@ function resizeWindow() {
         $('#statement-box').css('padding', statementMobilePadding / 2 + 'px').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px').css('width', 'calc(100% - ' + (statementMobilePadding / 2 + 30) + 'px)').css('margin-left', '15px').css('margin-right', '15px');
         $('#statement').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px').css('font-size', '16px');
         
-        $('#overlay-close').css('font-size', '32px').css('right', '30px').css('top', '30px').css('background', 'white');
+        $('#overlay-close').css('font-size', '32px').css('right', '15px').css('top', '15px').css('background', 'white');
         
         $('#footer').css('margin-left', '15px').css('margin-right', '15px');
         
