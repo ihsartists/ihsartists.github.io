@@ -336,7 +336,17 @@ function loadPage(artistData){
 }
 
 function preloadFrontData(){
-    if(sessionStorage.frontData){} else {
+    if(sessionStorage.frontData && sessionStorage.frontDataExpire){
+        var frontDataExpire = new Date(sessionStorage.frontDataExpire);
+        var now = new Date();
+        
+        if(Math.abs(frontDataExpire - now) / 1000 / 60 > 120){
+            $.get('/data/front-data.json', frontData => {
+                sessionStorage.frontData = JSON.stringify(frontData);
+                sessionStorage.frontDataExpire = new Date();
+            });
+        }
+    } else {
         $.get('/data/front-data.json', frontData => {
             sessionStorage.frontData = JSON.stringify(frontData);
             sessionStorage.frontDataExpire = new Date();
@@ -346,9 +356,23 @@ function preloadFrontData(){
 
 if(artist){
     if (typeof(Storage) !== "undefined") {
-        if(sessionStorage.artistData){
-            loadPage(JSON.parse(sessionStorage.artistData)[artist]);
-            preloadFrontData();
+        
+        if(sessionStorage.artistData && sessionStorage.artistDataExpire){
+            
+            var artistDataExpire = new Date(sessionStorage.artistDataExpire);
+            var now = new Date();
+            
+            if(Math.abs(artistDataExpire - now) / 1000 / 60 < 120){
+                loadPage(JSON.parse(sessionStorage.artistData)[artist]);
+                preloadFrontData();
+            } else {
+                $.get('/data/artist-data.json', artistData => {
+                    loadPage(artistData[artist]);
+                    sessionStorage.artistData = JSON.stringify(artistData);
+                    sessionStorage.artistDataExpire = new Date();
+                    preloadFrontData();
+                });
+            }
         } else {
             $.get('/data/artist-data.json', artistData => {
                 loadPage(artistData[artist]);
