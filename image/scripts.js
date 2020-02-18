@@ -84,6 +84,7 @@ function viewStatement(){
     
     if($('#statement').height() > $('#statement-container').height() - statementPadding){
         $('#statement-box').css('height', 'calc(100% - ' + statementPadding + 'px)');
+        $('#statement').css('overflow-y', 'scroll');
     } else {
         $('#statement-box').css('margin-top', ($('#statement-container').height() - $('#statement').height() - statementPadding) / 2);
     }

@@ -193,10 +193,11 @@ body {
 }
 #statement {
     height: 100%;
-    overflow: scroll;
     padding-left: 30px;
     padding-right: 30px;
     font-size: 18px;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 #image-description-container {
     width: calc(96% - 10px);
@@ -240,4 +241,5 @@ body {
 #image-zoom-box {
     display: inline-block;
     text-align: center;
+    overflow: hidden;
 }
