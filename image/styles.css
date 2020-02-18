@@ -162,6 +162,7 @@ body {
     top: 30px;
     font-size: 50px;
     color: #616161;
+    display: none;
 }
 #overlay-close:hover {
     cursor: pointer;

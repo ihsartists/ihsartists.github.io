@@ -44,7 +44,7 @@ function resizeWindow() {
         $('#statement-box').css('padding', statementMobilePadding / 2 + 'px').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px').css('width', 'calc(100% - ' + (statementMobilePadding / 2 + 30) + 'px)').css('margin-left', '15px').css('margin-right', '15px');
         $('#statement').css('padding-left', statementMobilePadding / 4 + 'px').css('padding-right', statementMobilePadding / 4 + 'px').css('font-size', '16px');
         
-        $('#overlay-close').css('font-size', '32px').css('right', '15px').css('top', '15px').css('background', 'white');
+        $('#overlay-close').css('font-size', '32px').css('right', '15px').css('top', '15px');
         
         $('#footer').css('margin-left', '15px').css('margin-right', '15px');
         
@@ -61,6 +61,7 @@ function hideStatement(){
     $('#statement-container').css('display', 'none');
     $('#page-container').css('filter', 'none');
     $('body').css('height', '100%').css('overflow', 'scroll');
+    $('#overlay-close').css('display', 'none');
     
     if (history.pushState) {
         var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?a=' + artist + '&g=' + gallery + '&i=' + image + '&t=' + $.urlParam('t');
@@ -75,6 +76,7 @@ function viewStatement(){
     $('#statement-container').css('display', 'block');
     $('#page-container').css('filter', 'blur(4px)');
     $('body').css('height', '100%').css('overflow', 'hidden');
+    $('#overlay-close').css('display', 'block');
     
     if(deviceType == 'mobile'){
         statementPadding = statementMobilePadding;
@@ -347,6 +349,7 @@ function collapseImage(){
     $('#image-zoom-container').css('display', 'none');
     $('#page-container').css('filter', 'none');
     $('body').css('height', '100%').css('overflow', 'scroll');
+    $('#overlay-close').css('display', 'none');
 }
 function expandImage(){
     
@@ -354,6 +357,7 @@ function expandImage(){
     $('#image-zoom-container').css('display', 'block');
     $('#page-container').css('filter', 'blur(4px)');
     $('body').css('height', '100%').css('overflow', 'hidden');
+    $('#overlay-close').css('display', 'block');
     
     if(deviceType == 'mobile'){
         statementPadding = statementMobilePadding;
