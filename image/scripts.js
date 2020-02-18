@@ -288,11 +288,11 @@ function loadPage(artistData){
         $('#gallery-container').css('text-align', 'left');
     }
     
-    for(var i = 0; i < Object.keys(artistData.galleries).length; i++){
-        if(i == gallery) {
-           $('#gallery-navigator-text').append('<b class="gallery-navigator-tab" id="gallery-navigator-tab--current">' + artistData.galleries[i].name + '</b>');
+    for(var i = 0; i < artistData.order.length; i++){
+        if(artistData.order[i] == gallery) {
+           $('#gallery-navigator-text').append('<b class="gallery-navigator-tab" id="gallery-navigator-tab--current">' + artistData.galleries[artistData.order[i]].name + '</b>');
         } else {
-            $('#gallery-navigator-text').append('<b class="gallery-navigator-tab" onclick="window.location=\'/image/?a=' + artist + "&g=" + i + "&i=" + artistData.galleries[i].order[0] + "&t=" + $.urlParam('t') + '\'">' + artistData.galleries[i].name + '</b>');
+            $('#gallery-navigator-text').append('<b class="gallery-navigator-tab" onclick="window.location=\'/image/?a=' + artist + "&g=" + i + "&i=" + artistData.galleries[artistData.order[i]].order[0] + "&t=" + $.urlParam('t') + '\'">' + artistData.galleries[artistData.order[i]].name + '</b>');
         }
     }
     
