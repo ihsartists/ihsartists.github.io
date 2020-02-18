@@ -253,10 +253,19 @@ function loadPage(artistData){
     
     if(artistData.statement.type == 'text'){
         $('#statement').html(artistData.statement.content.split('\n').join('<br>'));
+        
+        if(statement){
+            viewStatement();
+        }
     }
-    
-    if(statement){
-        viewStatement();
+    if(artistData.statement.type == 'image'){
+        $('#statement').html('<img id="statement-image" src="/images/statement--' + artist + '.jpg">');
+        $('#statement-image').on('load', () => {
+            $('#statement-image').css('width', '100%');
+            if(statement){
+                viewStatement();
+            }
+        });
     }
     
     if(artistData.galleries[gallery].images[image].type == 'image'){
