@@ -1,2 +1,2 @@
-# ihsartists.github.io
-IHS Artists Test Website
+# [ihsartists.net](http://ihsartists.net/)
+IHS Artists Website
