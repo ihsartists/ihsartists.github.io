@@ -45,7 +45,7 @@ function loadPage(frontData){
             $('.artist-bottom').css('height', '43px');
         }
     }
-    $('#page-container').append("<div id='footer'><span id='footer-text'>© Copyright **YEAR**, All Rights Reserved<br><br>Website designed and coded by Josh Chang. <a href='mailto:joshchang04@gmail.com' class='footer-link'>Need help with a project of your own?</a></span></div>");
+    $('#page-container').append("<div id='footer'><span id='footer-text'>© Copyright **YEAR**, All Rights Reserved<br><br>Website designed and coded by Josh Chang.</span></div>");
     
     var today = new Date();
     $('#footer').html($('#footer').html().split('**YEAR**').join(today.getFullYear().toString()));
