@@ -37,7 +37,7 @@ function loadPage(frontData){
         for(var j = 0; j < frontData.years[i][deviceType].length; j++){
             $('#year'+ i).append(`
                 <a href="image/?a=`+ frontData.years[i][deviceType][j] +`&g=`+ frontData[frontData.years[i][deviceType][j]].link[0] +`&i=`+ frontData[frontData.years[i][deviceType][j]].link[1] +`&t=`+ frontData[frontData.years[i][deviceType][j]].name.split("'").join("\\'") +`\`" class="artist">
-                    <img class="artist-thumb" src="/images/artist-thumb--` + frontData.years[i][deviceType][j] + `.jpg">
+                    <img alt="Thumbnail image for ` + frontData[frontData.years[i][deviceType][j]].name + `" class="artist-thumb" src="/images/artist-thumb--` + frontData.years[i][deviceType][j] + `.jpg">
                     <div class="artist-bottom">
                         <p class="artist-name">`+ frontData[frontData.years[i][deviceType][j]].name +`</p>
                     </div>

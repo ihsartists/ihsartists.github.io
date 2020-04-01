@@ -274,7 +274,7 @@ function loadPage(artistData){
         }
     }
     if(artistData.statement.type == 'image'){
-        $('#statement').html('<img id="statement-image" src="/images/statement--' + artist + '.jpg">');
+        $('#statement').html('<img alt="Artist statement of ' + artistData.name.split("%39").join("'")); $('title').text(artistData.name.split("%39").join("'") + '" id="statement-image" src="/images/statement--' + artist + '.jpg">');
         $('#statement-image').on('load', () => {
             $('#statement-image').css('width', '100%');
             if(statement){
@@ -284,7 +284,7 @@ function loadPage(artistData){
     }
     
     if(artistData.galleries[gallery].images[image].type == 'image'){
-        $('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + image + '.jpg').on('load', () => {
+        $('#main-image').attr('alt', 'Artwork: ' + artistData.galleries[gallery].images[image].name).attr('src', '/images/image--' + artist + '-' + gallery + '-' + image + '.jpg').on('load', () => {
             $('#loader').css('display', 'none');
             $('#main-image-container').css('display', 'block');
 
@@ -295,7 +295,7 @@ function loadPage(artistData){
     for(var i = 0; i < artistData.galleries[gallery].order.length; i++){
         $('#gallery-container').append(`
             <a href='/image/?a=` + artist + `&g=` + gallery + `&i=` + artistData.galleries[gallery].order[i] + `&t=` + $.urlParam("t") + `'>
-                <img class="gallery-image" src="/images/image-thumb--` + artist + `-` + gallery + `-` + artistData.galleries[gallery].order[i] + `.jpg">
+                <img alt="Thumbnail image of artwork: ` + artistData.galleries[gallery].images[artistData.galleries[gallery].order[i]].name + `" class="gallery-image" src="/images/image-thumb--` + artist + `-` + gallery + `-` + artistData.galleries[gallery].order[i] + `.jpg">
             </a>
         `);
     }
