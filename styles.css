@@ -81,6 +81,7 @@ textarea, select, input, button { outline: none; }
     margin-top: 40px;
     margin-left: 2%;
     color: #9e9e9e;
+    text-align: left;
 }
 .artist {
     outline: none;
@@ -128,7 +129,4 @@ textarea, select, input, button { outline: none; }
 #footer-text {
     color: #9e9e9e;
     font-size: 14px;
-}
-#year {
-    text-align: center;
 }
