@@ -108,6 +108,7 @@ textarea, select, input, button { outline: none; }
     display: table;
     vertical-align: middle;
     height: 50px;
+    text-decoration: none;
     width: 100%;
 }
 .artist-name {
