@@ -292,7 +292,11 @@ function loadPage(artistData){
     }
    
     for(var i = 0; i < artistData.galleries[gallery].order.length; i++){
-        $('#gallery-container').append('<img class="gallery-image" src="/images/image-thumb--' + artist + '-' + gallery + '-' + artistData.galleries[gallery].order[i] + '.jpg" onclick="window.location=\'/image/?a=' + artist + '&g=' + gallery + '&i=' + artistData.galleries[gallery].order[i] + '&t=' + $.urlParam("t") + '\'">');
+        $('#gallery-container').append(`
+            <a href='/image/?a=` + artist + `&g=` + gallery + `&i=` + artistData.galleries[gallery].order[i] + `&t=` + $.urlParam("t") + `'>
+                <img class="gallery-image" src="/images/image-thumb--` + artist + `-` + gallery + `-` + artistData.galleries[gallery].order[i] + `.jpg">
+            </a>
+        `);
     }
     
     if(deviceType == 'desktop'){
@@ -304,9 +308,9 @@ function loadPage(artistData){
     
     for(var i = 0; i < artistData.order.length; i++){
         if(artistData.order[i] == gallery) {
-           $('#gallery-navigator-text').append('<b class="gallery-navigator-tab" id="gallery-navigator-tab--current">' + artistData.galleries[artistData.order[i]].name + '</b>');
+           $('#gallery-navigator-text').append('<a class="gallery-navigator-tab" id="gallery-navigator-tab--current">' + artistData.galleries[artistData.order[i]].name + '</a>');
         } else {
-            $('#gallery-navigator-text').append('<b class="gallery-navigator-tab" onclick="window.location=\'/image/?a=' + artist + "&g=" + i + "&i=" + artistData.galleries[artistData.order[i]].order[0] + "&t=" + $.urlParam('t') + '\'">' + artistData.galleries[artistData.order[i]].name + '</b>');
+            $('#gallery-navigator-text').append('<a class="gallery-navigator-tab" href="/image/?a=' + artist + '&g=' + i + '&i=' + artistData.galleries[artistData.order[i]].order[0] + '&t=' + $.urlParam('t') + '">' + artistData.galleries[artistData.order[i]].name + '</a>');
         }
     }
     

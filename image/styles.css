@@ -118,6 +118,8 @@ body {
     color: #757575;
     -webkit-transition: background 0.3s, width 0.5s;
     transition: background 0.3s, width 0.5s;
+    font-weight: 700;
+    text-decoration: none;
 }
 .gallery-navigator-tab:hover {
     cursor: pointer;
