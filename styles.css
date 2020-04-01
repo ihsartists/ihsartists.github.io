@@ -89,8 +89,8 @@ textarea, select, input, button { outline: none; }
     text-align: center;
     text-decoration: none;
     background: white;
-    width: 18%;
-    margin: calc(1% - 2px);
+    width: calc(18% - 2px);
+    margin: calc(1% - 1px);
     border-radius: 0px;
     overflow: hidden;
     padding-top: 1%;
