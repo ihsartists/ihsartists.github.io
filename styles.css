@@ -85,8 +85,9 @@ textarea, select, input, button { outline: none; }
 .artist {
     display: inline-block;
     text-align: center;
+    text-decoration: none;
     background: white;
-    width: 18%;
+    width: calc(18% - 3px);
     margin: 1%;
     border-radius: 0px;
     overflow: hidden;
@@ -96,7 +97,6 @@ textarea, select, input, button { outline: none; }
     transition: background 0.3s;
 }
 .artist:hover {
-    cursor: pointer;
     background: #e0e0e0;
 }
 .artist-thumb {
