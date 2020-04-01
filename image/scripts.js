@@ -266,6 +266,7 @@ function loadPage(artistData){
     }
     
     if(artistData.statement.type == 'text'){
+        $('meta[name=description]').attr('content', artistData.statement.content.split('\n').join(' '));
         $('#statement').html(artistData.statement.content.split('\n').join('<br>'));
         
         if(statement){
