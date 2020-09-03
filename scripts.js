@@ -31,7 +31,7 @@ function loadPage(frontData){
 
     console.log(frontData);
     
-    for(var i = Object.keys(frontData.years).length - 1; i > -1; i--){
+    for(var i = frontData.years.length - 1; i > -1; i--){
         $('#page-container').append('<div class="year" id="year'+ i +'"><h2 class="year-name">'+ frontData.years[i].name +'</h2></div>');
 
         for(var j = 0; j < frontData.years[i][deviceType].length; j++){
