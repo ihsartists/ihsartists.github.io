@@ -223,7 +223,7 @@ function resizeImage() {
     
 }
 
-$('#main-image').attr('src', '/images/image--' + artist + '-' + gallery + '-' + image + '.jpg').on('load', () => {
+$('#main-image').attr('src', '/images/image--' + artist + '-' + image + '.jpg').on('load', () => {
                 
     $('#loader').css('display', 'none');
     $('#main-image-container').css('display', 'block');
@@ -237,7 +237,7 @@ function loadPage(artistData){
     
     if(artistData){
         if(artistData.galleries[gallery]){
-            if(artistData.galleries[gallery].images[image]){
+            if(artistData.images[image]){
                 console.log(artistData);
             } else {
                 window.location = '/404.html';
@@ -260,12 +260,12 @@ function loadPage(artistData){
         window.history.pushState({path:newurl},'',newurl);
     }
     
-    $('#image-description').text(artistData.galleries[gallery].images[image].name);
+    $('#image-description').text(artistData.images[image].name);
     if(deviceType == 'desktop'){
         $('#gallery-navigator').css('margin-top', '-' + ($('#image-description').height() + 532) + 'px');
     }
     
-    if(artistData.statement.type == 'text'){
+    if(artistData.statement.type === 'text'){
         $('meta[name=description]').attr('content', artistData.statement.content.split('\n').join(' '));
         $('#statement').html(artistData.statement.content.split('\n').join('<br>'));
         
@@ -273,7 +273,7 @@ function loadPage(artistData){
             viewStatement();
         }
     }
-    if(artistData.statement.type == 'image'){
+    if(artistData.statement.type === 'image'){
         $('#statement').html('<img alt="Artist statement of ' + artistData.name.split("%39").join("'")); $('title').text(artistData.name.split("%39").join("'") + '" id="statement-image" src="/images/statement--' + artist + '.jpg">');
         $('#statement-image').on('load', () => {
             $('#statement-image').css('width', '100%');
@@ -283,8 +283,8 @@ function loadPage(artistData){
         });
     }
     
-    if(artistData.galleries[gallery].images[image].type == 'image'){
-        $('#main-image').attr('alt', 'Artwork: ' + artistData.galleries[gallery].images[image].name).attr('src', '/images/image--' + artist + '-' + gallery + '-' + image + '.jpg').on('load', () => {
+    if(artistData.images[image].type === 'image'){
+        $('#main-image').attr('alt', 'Artwork: ' + artistData.images[image].name).attr('src', '/images/image--' + artist + '-' + image + '.jpg').on('load', () => {
             $('#loader').css('display', 'none');
             $('#main-image-container').css('display', 'block');
 
@@ -295,28 +295,28 @@ function loadPage(artistData){
     for(var i = 0; i < artistData.galleries[gallery].order.length; i++){
         $('#gallery-container').append(`
             <a href='/image/?a=` + artist + `&g=` + gallery + `&i=` + artistData.galleries[gallery].order[i] + `&t=` + $.urlParam("t") + `'>
-                <img alt="Thumbnail image of artwork: ` + artistData.galleries[gallery].images[artistData.galleries[gallery].order[i]].name + `" class="gallery-image" src="/images/image-thumb--` + artist + `-` + gallery + `-` + artistData.galleries[gallery].order[i] + `.jpg">
+                <img alt="Thumbnail image of artwork: ` + artistData.images[artistData.galleries[gallery].order[i]].name + `" class="gallery-image" src="/images/image-thumb--` + artist + `-` + artistData.galleries[gallery].order[i] + `.jpg">
             </a>
         `);
     }
     
-    if(deviceType == 'desktop'){
+    if(deviceType === 'desktop'){
         $('#gallery-container').css('height', $('#gallery-container').width() * 0.75 + 'px');
         $('.gallery-image').css('height', ($('#gallery-container').width() / 4 - 4) + 'px');
     } else {
         $('#gallery-container').css('text-align', 'left');
     }
     
-    for(var i = 0; i < artistData.order.length; i++){
-        if(artistData.order[i] == gallery) {
-           $('#gallery-navigator-text').append('<a class="gallery-navigator-tab" id="gallery-navigator-tab--current">' + artistData.galleries[artistData.order[i]].name + '</a>');
+    for(var i = 0; i < artistData.galleries.length; i++){
+        if(i === parseInt(gallery)) {
+           $('#gallery-navigator-text').append('<a class="gallery-navigator-tab" id="gallery-navigator-tab--current">' + artistData.galleries[i].name + '</a>');
         } else {
-            $('#gallery-navigator-text').append('<a class="gallery-navigator-tab" href="/image/?a=' + artist + '&g=' + i + '&i=' + artistData.galleries[artistData.order[i]].order[0] + '&t=' + $.urlParam('t') + '">' + artistData.galleries[artistData.order[i]].name + '</a>');
+            $('#gallery-navigator-text').append('<a class="gallery-navigator-tab" href="/image/?a=' + artist + '&g=' + i + '&i=' + artistData.galleries[i].order[0] + '&t=' + $.urlParam('t') + '">' + artistData.galleries[i].name + '</a>');
         }
     }
     
-    if(artistData.galleries[gallery].images[image].type == 'video'){
-        document.getElementById('main-image-scroll-container').outerHTML = '<iframe width="100%" height="100%" src="' + artistData.galleries[gallery].images[image].embed + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+    if(artistData.images[image].type === 'video'){
+        document.getElementById('main-image-scroll-container').outerHTML = '<iframe width="100%" height="100%" src="' + artistData.images[image].embed + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
 
         $('#loader').css('display', 'none');
         $('#main-image-container').css('display', 'block');
