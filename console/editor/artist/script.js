@@ -177,7 +177,7 @@ function loadPage(userId) {
 
 // Go to main draft selector menu
 function goHome() {
-	window.location = '/';
+	window.location = '/console/';
 }
 
 // Go to the home of the draft
