@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>IHS Artists Console</title>
+
+	<link type="text/css" rel="stylesheet" media="screen" href="style.css" />
+
+	<!-- Firebase -->
+	<script defer src="/__/firebase/7.19.1/firebase-app.js"></script>
+	<script defer src="/__/firebase/7.19.1/firebase-auth.js"></script>
+	<script defer src="/__/firebase/7.19.1/firebase-database.js"></script>
+	<script defer src="/__/firebase/init.js"></script>
+
+	<!-- FirebaseUI -->
+	<script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
+	<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css" />
+
+</head>
+
+<body>
+	<div id='auth'>
+		<h1 id='auth-title'>Welcome to the IHS Artists Console</h1>
+		<p id='auth-desc'>Sign in to edit the IHS Artists website</p>
+		<div id="auth-ui"></div>
+		<div id="auth-loader">Loading...</div>
+	</div>
+
+	<div id='console'>
+		<div id='page-container'>
+			<div id='top-bar-container'>
+				<h1 id="title">IHS Artists Console<span id='sign-out'>Sign Out</span></h1>
+			</div>
+
+			<div id='draft-selector'>
+				<h3 id='draft-selector-title'>Select a draft</h3>
+				<div id='draft-container'>
+					<div id='existing-drafts'></div>
+					<div class='draft'>
+						<div id='new-draft-title'>New Draft</div>
+						<div class='action-button create-button' onclick='createNewDraft()'>
+							<span class='action-button-text'>Create</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id='alert-bar-container'>
+			<div id='alert-bar'></div>
+		</div>
+
+		<div id='background-blur'></div>
+
+		<div id='confirm-box-container'>
+			<div id='confirm-box'>
+				<div id='confirm-box-title'>Are you sure?</div>
+				<div id='confirm-box-description'>This cannot be undone.</div>
+				<div id='confirm-box-button-container'>
+					<div id='confirm-button-cancel' class='action-button confirm-button' onclick='confirmCancel()'>Cancel</div>
+					<div id='confirm-button-delete' class='action-button confirm-button' onclick='confirmDelete()'>Delete</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src='script.js'></script>
+</body>
+
+</html>

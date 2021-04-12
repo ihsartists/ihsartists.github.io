@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>IHS Artists Console</title>
+
+    <link type="text/css" rel="stylesheet" media="screen" href="style.css" />
+
+    <!-- Firebase -->
+    <script defer src="/__/firebase/7.19.1/firebase-app.js"></script>
+    <script defer src="/__/firebase/7.19.1/firebase-auth.js"></script>
+    <script defer src="/__/firebase/7.19.1/firebase-database.js"></script>
+    <script defer src="/__/firebase/7.19.1/firebase-storage.js"></script>
+    <script defer src="/__/firebase/init.js"></script>
+
+    <!-- FirebaseUI -->
+    <script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;700" rel="stylesheet">
+
+</head>
+
+<body>
+    <div id='auth'>
+        <h1 id='auth-title'>Welcome to the IHS Artists Console</h1>
+        <p id='auth-desc'>Sign in to edit the IHS Artists website</p>
+        <div id="auth-ui"></div>
+        <div id="auth-loader">Loading...</div>
+    </div>
+
+    <div id='console'>
+        <div id='page-container'>
+            <div id='content-container'>
+                <div id='content'>
+                    <div id="title-container">
+                        <h1 id='title'>Loading...</h1>
+                    </div>
+                    <div id='home-button-container'>
+                        <a id='home-button'>
+                            <i class='material-icons' id='home-button-icon'>home</i>
+                        </a>
+                    </div>
+                    <div id='main-image-container'>
+                        <div id='main-image-padding-container'>
+                            <div id='main-image-scroll-container'>
+                                <img id='main-image' onclick='expandImage()' src=''>
+                            </div>
+                        </div>
+                    </div>
+                    <div id='image-description-container'>
+                        <div id='image-description'></div>
+                    </div>
+                    <div id='gallery-navigator'>
+                        <p id='gallery-navigator-text'>Gallery:</p>
+                    </div>
+                    <div id='statement-button' onclick='viewStatement()'>Statement</div>
+                    <div id='gallery-center-container'>
+                        <div id='gallery-container'>
+                        </div>
+                    </div>
+                    <div id='footer'>
+                        <span id='footer-text'>© Copyright **YEAR**, All Rights Reserved<br><br>Website designed and coded by Josh
+                            Chang.</span>
+                    </div>
+                </div>
+                <div id='overlay'>
+                </div>
+                <div id='statement-container'>
+                    <div id='statement-box'>
+                        <div id='statement'></div>
+                    </div>
+                </div>
+                <div id='image-zoom-container'>
+                    <div id='image-zoom-box'></div>
+                </div>
+                <div id='overlay-close' class="material-icons">close</div>               
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src='script.js'></script>
+
+</body>
+
+</html>

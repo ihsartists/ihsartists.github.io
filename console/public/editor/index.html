@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>IHS Artists Console</title>
+
+	<link type="text/css" rel="stylesheet" media="screen" href="style.css" />
+
+	<!-- Firebase -->
+	<script defer src="/__/firebase/7.19.1/firebase-app.js"></script>
+	<script defer src="/__/firebase/7.19.1/firebase-auth.js"></script>
+	<script defer src="/__/firebase/7.19.1/firebase-database.js"></script>
+	<script defer src="/__/firebase/7.19.1/firebase-storage.js"></script>
+	<script defer src="/__/firebase/init.js"></script>
+
+	<!-- FirebaseUI -->
+	<script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
+	<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.css" />
+
+	<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+</head>
+
+<body>
+	<div id='auth'>
+		<h1 id='auth-title'>Welcome to the IHS Artists Console</h1>
+		<p id='auth-desc'>Sign in to edit the IHS Artists website</p>
+		<div id="auth-ui"></div>
+		<div id="auth-loader">Loading...</div>
+	</div>
+
+	<div id='console'>
+		<div id='page-container'>
+			<div id='top-bar-container'>
+				<div id='top-bar-left'>
+					<div class='icon-action-button material-icons' id='back-button' onclick='goHome()'>arrow_back</div>
+					<input id='draft-title' value=''>
+				</div>
+				<div id='top-bar-right'>
+					<div class='action-button' id='preview-button' onclick='previewDraft()'>Preview</div>
+					<div class='action-button' id='publish-button' onclick='publishDraft()'>Publish</div>
+				</div>
+				<div id='top-bar-menu'>
+					<div class='menu-section' id='menu-section-file'>
+						<div class='menu-section-title'>File</div>
+						<div class='menu-section-options'>
+							<div class='menu-option' id='menu-option-new'>New</div>
+							<div class='menu-option' id='menu-option-open'>Open</div>
+							<div class='menu-option' id='menu-option-duplicate'>Make a copy</div>
+							<div class='menu-option-seperator'></div>
+							<div class='menu-option' id='menu-option-rename'>Rename</div>
+							<div class='menu-option' id='menu-option-delete'>Delete</div>
+							<div class='menu-option-seperator'></div>
+							<div class='menu-option' id='menu-option-preview'>Preview</div>
+							<div class='menu-option' id='menu-option-publish'>Publish to the web</div>
+							<div class='menu-option-seperator'></div>
+							<div class='menu-option' id='menu-option-signout'>Sign out</div>
+						</div>
+					</div>
+					<div class='menu-section' id='menu-section-edit'>
+						<div class='menu-section-title'>Edit</div>
+						<div class='menu-section-options'>
+							<div class='menu-option' id='menu-option-up'>Move up</div>
+							<div class='menu-option' id='menu-option-down'>Move down</div>
+							<div class='menu-option' id='menu-option-left'>Move left</div>
+							<div class='menu-option' id='menu-option-right'>Move right</div>
+							<div class='menu-option-seperator'></div>
+							<div class='menu-option' id='menu-option-openArtist'>Edit artist</div>
+							<div class='menu-option' id='menu-option-deleteArtist'>Delete artist</div>
+						</div>
+					</div>
+					<div class='menu-section' id='menu-section-view'>
+						<div class='menu-section-title'>View</div>
+						<div class='menu-section-options'>
+							<div class='menu-option' id='menu-option-desktop'>Desktop</div>
+							<div class='menu-option' id='menu-option-mobile'>Mobile</div>
+							<div class='menu-option-seperator'></div>
+							<div class='menu-option' id='menu-option-fullscreen'>Fullscreen</div>
+						</div>
+					</div>
+					<div class='menu-section' id='menu-section-insert'>
+						<div class='menu-section-title'>Insert</div>
+						<div class='menu-section-options'>
+							<div class='menu-option' id='menu-option-year'>Year</div>
+							<div class='menu-option' id='menu-option-artist'>Artist</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id='content-container'>
+				<div id='content'>
+					<h1 id='title'>IHS Artists</h1>
+				</div>
+			</div>
+		</div>
+
+		<div id='alert-bar-container'>
+			<div id='alert-bar'></div>
+		</div>
+
+		<div id='background-blur'></div>
+
+		<div id='confirm-box-container'>
+			<div id='confirm-box'>
+				<div id='confirm-box-title'>Are you sure?</div>
+				<div id='confirm-box-description'>This cannot be undone.</div>
+				<div id='confirm-box-button-container'>
+					<div id='confirm-button-cancel' class='action-button confirm-button' onclick='confirmCancel()'>Cancel</div>
+					<div id='confirm-button-delete' class='action-button confirm-button' onclick='confirmDelete()'>Delete</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src='script.js'></script>
+
+</body>
+
+</html>
