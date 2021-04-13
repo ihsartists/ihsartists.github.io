@@ -73,6 +73,7 @@ var galleryId = 0;
 var imageId = 0;
 var aObj;
 var aObjFront;
+var token = null;
 
 var artworkEditor = {
 	open: false,
@@ -1580,21 +1581,33 @@ function prepareArtworkEditor() {
 	setFrontNewThumbFalse();
 }
 
-
 // Sends a http request to the GitHub API
 function github(type, endpoint, data, success, error) {
 	function sendRequest() {
-		$.ajax({
-			dataType: 'json',
-			url: 'https://api.github.com/' + endpoint,
-			type: type,
-			data: JSON.stringify(data),
-			beforeSend: function (xhr) {
-				xhr.setRequestHeader('Authorization', 'token ' + token);
-			},
-			success: success,
-			error: error
-		});
+		if(data !== null){
+			$.ajax({
+				dataType: 'json',
+				url: 'https://api.github.com/' + endpoint,
+				type: type,
+				data: JSON.stringify(data),
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('Authorization', 'token ' + token);
+				},
+				success: success,
+				error: error
+			});
+		} else {
+			$.ajax({
+				dataType: 'json',
+				url: 'https://api.github.com/' + endpoint,
+				type: type,
+				beforeSend: function (xhr) {
+					xhr.setRequestHeader('Authorization', 'token ' + token);
+				},
+				success: success,
+				error: error
+			});
+		}
 	}
 	if (token === null) {
 		firebase.database().ref('users/' + uid + '/auth').once('value').then(function (snapshot) {
@@ -1686,6 +1699,8 @@ const toDataURL = url => fetch(url)
 // Sends data to publish to GitHub
 function sendDataToGithub() {
 
+	$.ajaxSetup({ cache: false });
+
 	// Aliases and clones
 	var draft = draftData[draftId];
 	var front = draft.data.frontData;
@@ -1693,6 +1708,7 @@ function sendDataToGithub() {
 
 	var total = 0;
 	var done = 0;
+	var queue = [];
 
 	// Final data files
 	var frontToSave = {
@@ -1724,7 +1740,7 @@ function sendDataToGithub() {
 						toDataURL(url).then(dataUrl => {
 
 							// Save result
-							githubPut('images/artist-thumb--' + artist + '.jpg', dataUrl.split(',')[1], () => { done++; }, console.error);
+							queue.push(['images/artist-thumb--' + artist + '.jpg', dataUrl.split(',')[1], false]);
 						})
 					});
 
@@ -1772,7 +1788,7 @@ function sendDataToGithub() {
 								toDataURL(url).then(dataUrl => {
 		
 									// Save result
-									githubPut('images/image-thumb--' + artist + '-' + image + '.jpg', dataUrl.split(',')[1], () => { done++; }, console.error);
+									queue.push(['images/image-thumb--' + artist + '-' + image + '.jpg', dataUrl.split(',')[1], false]);
 								})
 							});
 		
@@ -1793,7 +1809,7 @@ function sendDataToGithub() {
 								toDataURL(url).then(dataUrl => {
 		
 									// Save result
-									githubPut('images/image--' + artist + '-' + image + '.jpg', dataUrl.split(',')[1], () => { done++; }, console.error);
+									queue.push(['images/image--' + artist + '-' + image + '.jpg', dataUrl.split(',')[1], false]);
 								})
 							});
 		
@@ -1805,26 +1821,37 @@ function sendDataToGithub() {
 	}
 
 	// Track upload progress
-	console.log(done + ' of ' + total);
-	var doneInterval = setInterval(() => {
+	let spot = 0;
+	var queueInterval = setInterval(() => {
 
 		console.log(done + ' of ' + total);
+
+		if(queue[spot]){
+			if(queue[spot][2] === false){
+				queue[spot][2] = true;
+				githubPut(queue[spot][0], queue[spot][1], data => {
+					done++;
+					spot++;
+				}, console.error)
+			}
+		}
 
 		if(done === total){
 
 			// Upload final data if everything worked
-			githubPut('data/front-data.json', btoa(JSON.parse(frontToSave)), console.log, console.error)
-			githubPut('data/artist-data.json', btoa(JSON.parse(artistsToSave)), data => {
+			githubPut('data/front-data.json', base64encode(JSON.stringify(frontToSave)), () => {
+				githubPut('data/artist-data.json', base64encode(JSON.stringify(artistsToSave)), data => {
 				
-				console.log(data)
-
-				// Close box after done
-				bottomAlert('Draft published.', '#26a69a', 3000);
-
-			}, console.error)
-			clearInterval(doneInterval)
+					console.log(data)
+	
+					// Close box after done
+					bottomAlert('Draft published.', '#26a69a', 3000);
+	
+				}, console.error)
+			}, console.error);
+			clearInterval(queueInterval)
 		}
-	}, 100)
+	}, 0)
 
 	console.log(frontToSave);
 	console.log(artistsToSave);
