@@ -230,7 +230,7 @@ function loadData(callback) {
 
 // Save the updated data to Firebase
 function saveData() {
-	firebase.database().ref('users/' + uid + '/drafts').set(JSON.stringify(draftData)).then(function (){
+	firebase.database().ref('users/' + uid + '/drafts').set(JSON.stringify(draftData)).then(function () {
 		console.log('Data saved', aObj);
 	});
 }
@@ -1429,7 +1429,7 @@ function renderMainImage() {
 
 	// Image
 	if (aObj.images[imageId].type === 'image') {
-		if($('#main-image').length){
+		if ($('#main-image').length) {
 			var height = $('#main-image').height();
 		}
 		$('#main-image-padding-container').html(`
@@ -1438,7 +1438,7 @@ function renderMainImage() {
 			</div>
 		`);
 		$('#main-image').height(height);
-		
+
 		// Uploaded image that is from Firebase
 		if (aObj.images[imageId].newImage) {
 
@@ -1584,7 +1584,7 @@ function prepareArtworkEditor() {
 // Sends a http request to the GitHub API
 function github(type, endpoint, data, success, error) {
 	function sendRequest() {
-		if(data !== null){
+		if (data !== null) {
 			$.ajax({
 				dataType: 'json',
 				url: 'https://api.github.com/' + endpoint,
@@ -1696,6 +1696,17 @@ const toDataURL = url => fetch(url)
 		reader.readAsDataURL(blob)
 	}))
 
+// Unicode base64 function
+function base64EncodeUnicode(str) {
+	// First we escape the string using encodeURIComponent to get the UTF-8 encoding of the characters, 
+	// then we convert the percent encodings into raw bytes, and finally feed it to btoa() function.
+	utf8Bytes = encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+		return String.fromCharCode('0x' + p1);
+	});
+
+	return btoa(utf8Bytes);
+}
+
 // Sends data to publish to GitHub
 function sendDataToGithub() {
 
@@ -1729,7 +1740,7 @@ function sendDataToGithub() {
 					name: front[artist].name
 				}
 				if (front[artist].newThumb.hasThumb) {
-					
+
 					// Request firebase for url of image
 					let id = front[artist].newThumb.newThumbId;
 					total++;
@@ -1759,60 +1770,60 @@ function sendDataToGithub() {
 			}
 
 			// Iterate over galleries
-			for(let k = 0; k < artists[artist].galleries.length; k++){
+			for (let k = 0; k < artists[artist].galleries.length; k++) {
 
 				// Iterate over images
 				let gallery = artists[artist].galleries[k];
-				for(let l = 0; l < gallery.order.length; l++){
+				for (let l = 0; l < gallery.order.length; l++) {
 
 					let image = gallery.order[l]
 					artistsToSave[artist].images[image] = {
 						name: artists[artist].images[image].name,
 						type: artists[artist].images[image].type
 					}
-					if(artists[artist].images[image].type === 'video'){
+					if (artists[artist].images[image].type === 'video') {
 						artistsToSave[artist].images[image].embed = artists[artist].images[image].embed;
 					}
 
 					// If there is a new thumb
 					if (artists[artist].images[image].newThumb) {
 						if (artists[artist].images[image].newThumb.hasThumb) {
-							
+
 							// Request firebase for url of image
 							let id = artists[artist].images[image].newThumb.newThumbId;
 							total++;
 							firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL().then(function (url) {
 								customImageCache[id] = url;
-		
+
 								// Turn the url into a data url
 								toDataURL(url).then(dataUrl => {
-		
+
 									// Save result
 									queue.push(['images/image-thumb--' + artist + '-' + image + '.jpg', dataUrl.split(',')[1], false]);
 								})
 							});
-		
+
 						}
 					}
 
 					// If there is a new image
 					if (artists[artist].images[image].newImage) {
 						if (artists[artist].images[image].newImage.hasImage) {
-							
+
 							// Request firebase for url of image
 							let id = artists[artist].images[image].newImage.newImageId;
 							total++;
 							firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL().then(function (url) {
 								customImageCache[id] = url;
-		
+
 								// Turn the url into a data url
 								toDataURL(url).then(dataUrl => {
-		
+
 									// Save result
 									queue.push(['images/image--' + artist + '-' + image + '.jpg', dataUrl.split(',')[1], false]);
 								})
 							});
-		
+
 						}
 					}
 				}
@@ -1826,8 +1837,8 @@ function sendDataToGithub() {
 
 		console.log(done + ' of ' + total);
 
-		if(queue[spot]){
-			if(queue[spot][2] === false){
+		if (queue[spot]) {
+			if (queue[spot][2] === false) {
 				queue[spot][2] = true;
 				githubPut(queue[spot][0], queue[spot][1], data => {
 					done++;
@@ -1836,17 +1847,19 @@ function sendDataToGithub() {
 			}
 		}
 
-		if(done === total){
+		if (done === total) {
+
+			console.log(JSON.stringify(artistsToSave), base64EncodeUnicode(JSON.stringify(artistsToSave)))
 
 			// Upload final data if everything worked
-			githubPut('data/front-data.json', base64encode(JSON.stringify(frontToSave)), () => {
-				githubPut('data/artist-data.json', base64encode(JSON.stringify(artistsToSave)), data => {
-				
+			githubPut('data/front-data.json', base64EncodeUnicode(JSON.stringify(frontToSave)), () => {
+				githubPut('data/artist-data.json', base64EncodeUnicode(JSON.stringify(artistsToSave)), data => {
+
 					console.log(data)
-	
+
 					// Close box after done
 					bottomAlert('Draft published.', '#26a69a', 3000);
-	
+
 				}, console.error)
 			}, console.error);
 			clearInterval(queueInterval)
