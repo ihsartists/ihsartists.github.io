@@ -1864,7 +1864,7 @@ function sendDataToGithub() {
 			}, console.error);
 			clearInterval(queueInterval)
 		}
-	}, 0)
+	}, 70)
 
 	console.log(frontToSave);
 	console.log(artistsToSave);
