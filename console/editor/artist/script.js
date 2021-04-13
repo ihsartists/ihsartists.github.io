@@ -1835,7 +1835,7 @@ function sendDataToGithub() {
 	let spot = 0;
 	var queueInterval = setInterval(() => {
 
-		console.log(done + ' of ' + total);
+		$('title').text(done + ' of ' + total);
 
 		if (queue[spot]) {
 			if (queue[spot][2] === false) {
@@ -1849,13 +1849,16 @@ function sendDataToGithub() {
 
 		if (done === total) {
 
-			console.log(JSON.stringify(artistsToSave), base64EncodeUnicode(JSON.stringify(artistsToSave)))
-
 			// Upload final data if everything worked
 			githubPut('data/front-data.json', base64EncodeUnicode(JSON.stringify(frontToSave)), () => {
 				githubPut('data/artist-data.json', base64EncodeUnicode(JSON.stringify(artistsToSave)), data => {
 
-					console.log(data)
+					// Reset/save data
+					draftData[draftId].data.artistData = artistsToSave;
+					draftData[draftId].data.frontData = frontToSave;
+					saveData();
+
+					$('title').text(draftData[draftId].name + ' | IHS Artists Console');
 
 					// Close box after done
 					bottomAlert('Draft published.', '#26a69a', 3000);
