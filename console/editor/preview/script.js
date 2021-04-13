@@ -155,45 +155,48 @@ function renderFrontData(frontData) {
     `);
 
     for (var i = frontData.years.length - 1; i > -1; i--) {
-        $('#content').append('<div class="year" id="year' + i + '"><h2 class="year-name">' + frontData.years[i].name + '</h2></div>');
 
-        for (var j = 0; j < frontData.years[i][deviceType].length; j++) {
-            var artistId = frontData.years[i][deviceType][j];
+        if(!frontData.years[i].name.toLowerCase().includes('hidden')){
+            $('#content').append('<div class="year" id="year' + i + '"><h2 class="year-name">' + frontData.years[i].name + '</h2></div>');
 
-            if (frontData[artistId].newThumb) {
-                if (frontData[artistId].newThumb.hasThumb) {
-                    let id = frontData[artistId].newThumb.newThumbId;
-                    var thumb = `<img class="artist-thumb ${id}" src=""></img>`;
-                    if (customImageCache[id]) {
-                        thumb = `<img class="artist-thumb ${id}" src="${customImageCache[id]}"></img>`;
+            for (var j = 0; j < frontData.years[i][deviceType].length; j++) {
+                var artistId = frontData.years[i][deviceType][j];
+
+                if (frontData[artistId].newThumb) {
+                    if (frontData[artistId].newThumb.hasThumb) {
+                        let id = frontData[artistId].newThumb.newThumbId;
+                        var thumb = `<img class="artist-thumb ${id}" src=""></img>`;
+                        if (customImageCache[id]) {
+                            thumb = `<img class="artist-thumb ${id}" src="${customImageCache[id]}"></img>`;
+                        } else {
+                            firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL().then(function (url) {
+                                customImageCache[id] = url;
+                                $('.' + id).attr('src', url);
+                            });
+                        }
                     } else {
-                        firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL().then(function (url) {
-                            customImageCache[id] = url;
-                            $('.' + id).attr('src', url);
-                        });
+                        var thumb = `<span class='artist-placeholder'></span>`;
                     }
                 } else {
-                    var thumb = `<span class='artist-placeholder'></span>`;
+                    var thumb = `<img class="artist-thumb" src="${websiteBaseUrl}/images/artist-thumb--${artistId}.jpg"></img>`;
                 }
-            } else {
-                var thumb = `<img class="artist-thumb" src="${websiteBaseUrl}/images/artist-thumb--${artistId}.jpg"></img>`;
+
+                $('#year' + i).append(`
+                    <a href="./image/?id=${draftId}&a=${frontData.years[i][deviceType][j]}&g=${frontData[frontData.years[i][deviceType][j]].link[0]}&i=${frontData[frontData.years[i][deviceType][j]].link[1]}" id="artist-${artistId}" class="artist">
+                        ${thumb}
+                        <div class="artist-bottom">
+                            <p class="artist-name">${frontData[artistId].name}</p>
+                        </div>
+                    </a>
+                `);
             }
 
-            $('#year' + i).append(`
-                <a href="./image/?id=${draftId}&a=${frontData.years[i][deviceType][j]}&g=${frontData[frontData.years[i][deviceType][j]].link[0]}&i=${frontData[frontData.years[i][deviceType][j]].link[1]}" id="artist-${artistId}" class="artist">
-                    ${thumb}
-                    <div class="artist-bottom">
-                        <p class="artist-name">${frontData[artistId].name}</p>
-                    </div>
-                </a>
-            `);
-        }
-
-        if (deviceType == 'mobile') {
-            $('.artist').css('width', 'calc(31.33% - 3px)').css('padding-top', '1.5%');
-            $('.year-name').css('margin-left', '4%');
-            $('.artist-name').css('font-size', '14px');
-            $('.artist-bottom').css('height', '43px');
+            if (deviceType == 'mobile') {
+                $('.artist').css('width', 'calc(31.33% - 3px)').css('padding-top', '1.5%');
+                $('.year-name').css('margin-left', '4%');
+                $('.artist-name').css('font-size', '14px');
+                $('.artist-bottom').css('height', '43px');
+            }
         }
     }
     $('#content').append("<div id='footer'><span id='footer-text'>© Copyright **YEAR**, All Rights Reserved<br><br>Website designed and coded by Josh Chang.</span></div>");

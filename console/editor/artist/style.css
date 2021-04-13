@@ -237,6 +237,13 @@ body {
     height: 2px;
     margin: 10px;
 }
+#link-input {
+    width: 20px;
+    opacity: 0;
+}
+#link-input:hover {
+    cursor: pointer;
+}
 
 /* Internal content styles */
 #content-container {

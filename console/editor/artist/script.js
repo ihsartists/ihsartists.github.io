@@ -133,6 +133,7 @@ function loadPage(userId) {
 		$('#draft-title').val(draftData[draftId].name);
 
 		$('#title').val(aObj.name);
+		$('#link-input').val(`https://ihsartists.net/image/?a=${a}&g=${galleryId}&i=${imageId}`);
 
 		prepareInput($("#draft-title"), renameDraft);
 		prepareInput($("#title"), renameArtist);
@@ -483,6 +484,12 @@ var optionFunctions = {
 	deleteArtwork: function () {
 		handleSelectedKey('Backspace');
 	},
+	copyLink: function () {
+		var copyText = document.querySelector("#link-input");
+		copyText.select();
+		document.execCommand("copy");
+		bottomAlert('Link copied.', '#2196f3', 2000);
+	},
 	renameGallery: function () {
 		$('#gallery-navigator-tab--current input').focus();
 		hideMenuSection($('#menu-section-edit'));
@@ -776,6 +783,8 @@ function changeImage(gallery, image, click) {
 	galleryId = gallery;
 	imageId = image;
 	renderArtistData();
+
+	$('#link-input').val(`https://ihsartists.net/image/?a=${a}&g=${galleryId}&i=${imageId}`);
 
 	if (click) {
 		firstClick = true;
