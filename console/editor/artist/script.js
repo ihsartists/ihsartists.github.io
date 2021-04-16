@@ -1277,8 +1277,16 @@ function prepareImageUpload(input, preview, callback) {
 
 // Inserts a new image into the current gallery
 function newArtwork() {
-	aObj.galleries[galleryId].order.push(Object.keys(aObj.images).length);
-	aObj.images[Object.keys(aObj.images).length] = {
+
+	var newArtworkId = 0;
+	for(let i = 0; i < Object.keys(aObj.images).length; i++){
+		if(parseInt(Object.keys(aObj.images)[i]) >= newArtworkId){
+			newArtworkId = parseInt(Object.keys(aObj.images)[i]) + 1;
+		}
+	}
+
+	aObj.galleries[galleryId].order.push(newArtworkId);
+	aObj.images[newArtworkId] = {
 		name: "Artwork description",
 		type: "image",
 		newImage: {
@@ -1289,7 +1297,7 @@ function newArtwork() {
 		}
 	};
 
-	imageId = Object.keys(aObj.images).length - 1;
+	imageId = newArtworkId;
 	selected = true;
 
 	renderMainImage();
@@ -1303,11 +1311,18 @@ function newArtwork() {
 
 // Create and initialize a new gallery
 function newGallery() {
+	var newArtworkId = 0;
+	for(let i = 0; i < Object.keys(aObj.images).length; i++){
+		if(parseInt(Object.keys(aObj.images)[i]) >= newArtworkId){
+			newArtworkId = parseInt(Object.keys(aObj.images)[i]) + 1;
+		}
+	}
+
 	aObj.galleries.push({
 		name: (aObj.galleries.length + 1).toString(),
-		order: [Object.keys(aObj.images).length]
+		order: [newArtworkId]
 	});
-	aObj.images[Object.keys(aObj.images).length] = {
+	aObj.images[newArtworkId] = {
 		name: "Artwork description",
 		type: "image",
 		newImage: {
@@ -1318,7 +1333,7 @@ function newGallery() {
 		}
 	};
 	galleryId = aObj.galleries.length - 1;
-	imageId = Object.keys(aObj.images).length - 1;
+	imageId = newArtworkId;
 	saveData();
 	renderArtistData();
 
