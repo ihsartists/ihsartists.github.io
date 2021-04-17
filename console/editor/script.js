@@ -70,7 +70,6 @@ var draftData = [];
 var draftId = 0;
 var customImageCache = {};
 var websiteBaseUrl = 'https://ihsartists.net/';
-var token = null;
 
 // Initial loading of the page
 function loadPage(userId) {
@@ -145,8 +144,11 @@ function loadData(callback) {
 
 // Save the updated data to Firebase
 function saveData() {
-	console.log('Data saved', draftData);
-	firebase.database().ref('users/' + uid + '/drafts').set(JSON.stringify(draftData));
+	$('title').text('Saving...');
+	firebase.database().ref('users/' + uid + '/drafts').set(JSON.stringify(draftData)).then(() => {
+		$('title').text(draftData[draftId].name + ' | IHS Artists Console');
+		console.log('Data saved', draftData);
+	});
 }
 
 // Displays a temporary alert bar at the bottom of the window
@@ -851,92 +853,108 @@ function renderFrontData() {
 	prepareButtons();
 }
 
-// Sends a http request to the GitHub API
-function github(type, endpoint, data, success, error) {
-	function sendRequest() {
-		if (data !== null) {
-			$.ajax({
-				dataType: 'json',
-				url: 'https://api.github.com/' + endpoint,
-				type: type,
-				data: JSON.stringify(data),
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader('Authorization', 'token ' + token);
-				},
-				success: success,
-				error: error
-			});
-		} else {
-			$.ajax({
-				dataType: 'json',
-				url: 'https://api.github.com/' + endpoint,
-				type: type,
-				beforeSend: function (xhr) {
-					xhr.setRequestHeader('Authorization', 'token ' + token);
-				},
-				success: success,
-				error: error
-			});
-		}
-	}
+// Sends a http request to the GitHub API using promises and fetch
+var token = null;
+async function gh(method, endpoint, data) {
 	if (token === null) {
-		firebase.database().ref('users/' + uid + '/auth').once('value').then(function (snapshot) {
-			if (snapshot.val()) {
-				token = snapshot.val().token;
-				sendRequest();
+		let snapshot = await firebase.database().ref('users/' + uid + '/auth').once('value');
+		if (snapshot.val()) { token = snapshot.val().token }
+	}
+	let init = {
+		method,
+		headers: {
+			'Authorization': 'token ' + token
+		},
+		mode: 'cors',
+		credentials: 'omit',
+		cache: 'no-store'
+	};
+	if (data) { init.body = JSON.stringify(data) }
+
+	var res = await fetch('https://api.github.com/' + endpoint, init);
+	return await res.json();
+}
+
+// Gets the SHA of a file for updating it if it exists
+var shaCache = { sha: 'master', type: 'tree', tree: {} };
+async function ghSHA(path) {
+
+	let pathArr = path.split('/');
+	let dir = shaCache;
+
+	for (let i = 0; i < pathArr.length; i++) {
+
+		let next = pathArr[i];
+
+		// If we have already parsed this tree, go to the next
+		if (dir) {
+			if (dir.tree[next]) {
+				dir = dir.tree[next];
+	
+				// If we are at the end of the path
+				if (i === pathArr.length - 1) {
+					if (dir) {
+						return dir.sha;
+					} else {
+						return undefined;
+					}
+				}
+				continue;
 			}
-		});
-	} else {
-		sendRequest();
+		} else {
+			return undefined;
+		}
+
+		// If we need to parse this tree
+		if (dir.type === 'tree') {
+			let res = await gh('GET', 'repos/ihsartists/ihsartists.github.io/git/trees/' + dir.sha);
+			for (let j = 0; j < res.tree.length; j++) {
+				dir.tree[res.tree[j].path] = {
+					sha: res.tree[j].sha,
+					type: res.tree[j].type
+				}
+				if (res.tree[j].type === 'tree') {
+					dir.tree[res.tree[j].path].tree = {};
+				}
+			}
+			dir = dir.tree[next];
+
+			// If we are at the end of the path
+			if (i === pathArr.length - 1) {
+				if (dir) {
+					return dir.sha;
+				} else {
+					return undefined;
+				}
+			}
+		} else {
+			// File does not exist
+			return undefined;
+		}
 	}
 }
 
 // Gets a file in the repository
-function githubGet(path, success, error) {
-	github('GET', 'repos/ihsartists/ihsartists.github.io/contents/' + path + '?_=' + new Date().getTime(), null, data => {
-		success(data);
-	}, err => {
-		error(err);
-	});
+async function ghGet(path) {
+	return await gh('GET', 'repos/ihsartists/ihsartists.github.io/contents/' + path);
 }
 
 // Updates/creates a file in the repository
-function githubPut(path, contents, success, fail) {
-	githubGet(path, data => {
-		github('PUT', 'repos/ihsartists/ihsartists.github.io/contents/' + path, {
-			message: 'Update from console',
-			content: contents,
-			sha: data.sha
-		}, data => {
-			success(data);
-		}, err => {
-			fail(err);
-		});
-	}, error => {
-		github('PUT', 'repos/ihsartists/ihsartists.github.io/contents/' + path, {
-			message: 'Update from console',
-			content: contents
-		}, data => {
-			success(data);
-		}, err => {
-			fail(err);
-		});
+async function ghPut(path, content) {
+	let sha = await ghSHA(path);
+	return await gh('PUT', 'repos/ihsartists/ihsartists.github.io/contents/' + path, {
+		message: 'Update from console',
+		content,
+		sha
 	});
 }
 
 // Deletes a file in the repository
-function githubDelete(path, success, fail) {
-	githubGet(path, data => {
-		github('DELETE', 'repos/ihsartists/ihsartists.github.io/contents/' + path, {
-			message: 'Update from console',
-			sha: data.sha
-		}, data => {
-			success(data);
-		}, err => {
-			fail(err);
-		});
-	}, error => {
-		fail('File does not exist');
+async function ghDelete(path) {
+	let sha = await ghSHA(path);
+	return await gh('DELETE', 'repos/ihsartists/ihsartists.github.io/contents/' + path, {
+		message: 'Update from console',
+		sha
 	});
 }
 
@@ -947,9 +965,9 @@ function publishDraft() {
 	confirmBox('Are you sure you want to publish this draft?', 'This cannot be undone.', 'Publish', 'Cancel', function () {
 
 		// Publish content
-		sendDataToGithub();
-
-		closeConfirmBox();
+		uploadToGithub().then(() => {
+			closeConfirmBox();
+		})
 
 	}, function () {
 		closeConfirmBox();
@@ -978,9 +996,7 @@ function base64EncodeUnicode(str) {
 }
 
 // Sends data to publish to GitHub
-function sendDataToGithub() {
-
-	$.ajaxSetup({ cache: false });
+async function uploadToGithub() {
 
 	// Aliases and clones
 	var draft = draftData[draftId];
@@ -988,8 +1004,6 @@ function sendDataToGithub() {
 	var artists = draft.data.artistData;
 
 	var total = 0;
-	var done = 0;
-	var queue = [];
 
 	// Final data files
 	var frontToSave = {
@@ -1014,17 +1028,15 @@ function sendDataToGithub() {
 					// Request firebase for url of image
 					let id = front[artist].newThumb.newThumbId;
 					total++;
-					firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL().then(function (url) {
-						customImageCache[id] = url;
+					$('title').text(total);
+					
+					let url = await firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL();
+					let dataUrl = await toDataURL(url);
 
-						// Turn the url into a data url
-						toDataURL(url).then(dataUrl => {
+					await ghPut('images/artist-thumb--' + artist + '.jpg', dataUrl.split(',')[1]);
 
-							// Save result
-							queue.push(['images/artist-thumb--' + artist + '.jpg', dataUrl.split(',')[1], false]);
-						})
-					});
-
+				} else {
+					frontToSave[artist].newThumb = front[artist].newThumb;
 				}
 			} else {
 				frontToSave[artist] = JSON.parse(JSON.stringify(front[artist]));
@@ -1062,17 +1074,15 @@ function sendDataToGithub() {
 							// Request firebase for url of image
 							let id = artists[artist].images[image].newThumb.newThumbId;
 							total++;
-							firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL().then(function (url) {
-								customImageCache[id] = url;
+							$('title').text(total);
 
-								// Turn the url into a data url
-								toDataURL(url).then(dataUrl => {
+							let url = await firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL();
+							let dataUrl = await toDataURL(url);
 
-									// Save result
-									queue.push(['images/image-thumb--' + artist + '-' + image + '.jpg', dataUrl.split(',')[1], false]);
-								})
-							});
+							await ghPut('images/image-thumb--' + artist + '-' + image + '.jpg', dataUrl.split(',')[1]);
 
+						} else {
+							artistsToSave[artist].images[image].newThumb = artists[artist].images[image].newThumb;
 						}
 					}
 
@@ -1083,17 +1093,15 @@ function sendDataToGithub() {
 							// Request firebase for url of image
 							let id = artists[artist].images[image].newImage.newImageId;
 							total++;
-							firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL().then(function (url) {
-								customImageCache[id] = url;
+							$('title').text(total);
 
-								// Turn the url into a data url
-								toDataURL(url).then(dataUrl => {
+							let url = await firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL();
+							let dataUrl = await toDataURL(url);
 
-									// Save result
-									queue.push(['images/image--' + artist + '-' + image + '.jpg', dataUrl.split(',')[1], false]);
-								})
-							});
+							await ghPut('images/image--' + artist + '-' + image + '.jpg', dataUrl.split(',')[1]);
 
+						} else {
+							artistsToSave[artist].images[image].newImage = artists[artist].images[image].newImage;
 						}
 					}
 				}
@@ -1101,45 +1109,19 @@ function sendDataToGithub() {
 		}
 	}
 
-	// Track upload progress
-	let spot = 0;
-	var queueInterval = setInterval(() => {
+	// Upload final data if everything worked
+	await ghPut('data/front-data.json', base64EncodeUnicode(JSON.stringify(frontToSave)));
+	await ghPut('data/artist-data.json', base64EncodeUnicode(JSON.stringify(artistsToSave)));
 
-		$('title').text(done + ' of ' + total);
+	shaCache = { sha: 'master', type: 'tree', tree: {} };
 
-		if (queue[spot]) {
-			if (queue[spot][2] === false) {
-				queue[spot][2] = true;
-				githubPut(queue[spot][0], queue[spot][1], data => {
-					done++;
-					spot++;
-				}, console.error)
-			}
-		}
+	// Reset/save data
+	draftData[draftId].data.artistData = artistsToSave;
+	draftData[draftId].data.frontData = frontToSave;
+	saveData();
 
-		if (done === total) {
+	$('title').text(draftData[draftId].name + ' | IHS Artists Console');
 
-			// Upload final data if everything worked
-			githubPut('data/front-data.json', base64EncodeUnicode(JSON.stringify(frontToSave)), () => {
-				githubPut('data/artist-data.json', base64EncodeUnicode(JSON.stringify(artistsToSave)), data => {
-
-					// Reset/save data
-					draftData[draftId].data.artistData = artistsToSave;
-					draftData[draftId].data.frontData = frontToSave;
-					saveData();
-
-					$('title').text(draftData[draftId].name + ' | IHS Artists Console');
-
-					// Close box after done
-					bottomAlert('Draft published.', '#26a69a', 3000);
-
-				}, console.error)
-			}, console.error);
-			clearInterval(queueInterval)
-		}
-	}, 70)
-
-	console.log(frontToSave);
-	console.log(artistsToSave);
-
+	// Close box after done
+	bottomAlert('Draft published.', '#26a69a', 3000);
 }

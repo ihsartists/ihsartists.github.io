@@ -234,7 +234,7 @@ $('#main-image').attr('src', '/images/image--' + artist + '-' + image + '.jpg').
 });
 
 function loadPage(artistData){
-    
+
     if(artistData){
         if(artistData.galleries[gallery]){
             if(artistData.images[image]){
