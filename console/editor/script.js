@@ -934,26 +934,12 @@ async function ghSHA(path) {
 	}
 }
 
-// Gets a file in the repository
-async function ghGet(path) {
-	return await gh('GET', 'repos/ihsartists/ihsartists.github.io/contents/' + path);
-}
-
 // Updates/creates a file in the repository
 async function ghPut(path, content) {
 	let sha = await ghSHA(path);
 	return await gh('PUT', 'repos/ihsartists/ihsartists.github.io/contents/' + path, {
 		message: 'Update from console',
 		content,
-		sha
-	});
-}
-
-// Deletes a file in the repository
-async function ghDelete(path) {
-	let sha = await ghSHA(path);
-	return await gh('DELETE', 'repos/ihsartists/ihsartists.github.io/contents/' + path, {
-		message: 'Update from console',
 		sha
 	});
 }
