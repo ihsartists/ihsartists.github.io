@@ -1757,6 +1757,11 @@ async function uploadToGithub() {
 	var artists = draft.data.artistData;
 
 	var total = 0;
+	var todo = 0;
+	var draftString = JSON.stringify(draft);
+	todo += draftString.split('newThumbId').length - 1;
+	todo += draftString.split('newImageId').length - 1;
+	$('title').text(total + 'of' + todo);
 
 	// Final data files
 	var frontToSave = {
@@ -1781,7 +1786,7 @@ async function uploadToGithub() {
 					// Request firebase for url of image
 					let id = front[artist].newThumb.newThumbId;
 					total++;
-					$('title').text(total);
+					$('title').text(total + 'of' + todo);
 					
 					let url = await firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL();
 					let dataUrl = await toDataURL(url);
@@ -1827,7 +1832,7 @@ async function uploadToGithub() {
 							// Request firebase for url of image
 							let id = artists[artist].images[image].newThumb.newThumbId;
 							total++;
-							$('title').text(total);
+							$('title').text(total + 'of' + todo);
 
 							let url = await firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL();
 							let dataUrl = await toDataURL(url);
@@ -1846,7 +1851,7 @@ async function uploadToGithub() {
 							// Request firebase for url of image
 							let id = artists[artist].images[image].newImage.newImageId;
 							total++;
-							$('title').text(total);
+							$('title').text(total + 'of' + todo);
 
 							let url = await firebase.storage().ref().child('user/' + uid + '/' + id + '.jpg').getDownloadURL();
 							let dataUrl = await toDataURL(url);
