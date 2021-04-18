@@ -239,3 +239,104 @@ body {
     text-align: center;
     overflow: hidden;
 }
+
+@media only screen and (max-width: 1050px) {
+    #title-container {
+        margin-top: 8px;
+    }
+}
+@media only screen and (max-width: 900px) {
+    #title-container {
+        margin-top: 3px;
+    }
+}
+@media only screen and (max-width: 700px) {
+    #title {
+        font-size: 25px;
+    }
+    #title-container {
+        margin-left: 18px;
+        margin-top: 0;
+    }
+    #title-container {
+        width: calc(100% - 120px);
+    }
+
+    #home-button {
+        margin-right: 10px;
+        margin-left: 10%;
+    }
+    #home-button-container {
+        margin-bottom: 30px;
+        top: 10px;
+    }
+
+    #main-image-padding-container {
+        max-width: calc(100% - 18px);
+    }
+    #main-image-container {
+        width: calc(100% - 18px);
+        text-align: center;
+        margin-left: 8px;
+        margin-right: 8px;
+        margin-top: 10px;
+    }
+    
+    #image-description {
+        width: calc(100% - 30px);
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+    
+    #gallery-navigator {
+        margin-top: 30px;
+        margin-left: 25px;
+    }
+    #statement-button {
+        margin-left: 25px;
+    }
+    
+    #gallery-container {
+        top: 18px;
+        margin: 10px;
+        max-width: 370px;
+    }
+    #gallery-center-container {
+        text-align: center;
+    }
+    
+    #page-container {
+        max-width: 370px;
+        margin-top: 5px;
+    }
+    
+    #statement-box {
+        padding: 30px;
+        padding-left: 15px;
+        padding-right: 15px;
+        width: calc(100% - 60px);
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+    #statement {
+        padding-left: 15px;
+        padding-right: 15px;
+        font-size: 16px;
+    }
+    
+    #overlay-close {
+        font-size: 32px;
+        right: 15px;
+        top: 15px;
+    }
+    
+    #footer {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+}
+@media only screen and (max-width: 325px) {
+    #page-container {
+        margin-top: 0px;
+    }
+}

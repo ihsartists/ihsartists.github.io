@@ -84,8 +84,8 @@ function renderPage(frontData) {
         }
     }
 
-    // Add a footer with the current year
-    $('footer-text').text(`© Copyright ${new Date().getFullYear().toString()}, All Rights Reserved<br><br>Website designed and coded by Josh Chang.`);
+    // Update the current year in the footer
+    $('.current-year').text(new Date().getFullYear().toString());
 
     initSearch();
 }

@@ -1,2 +1,0 @@
-TODO:
-- Delete images on delete draft
