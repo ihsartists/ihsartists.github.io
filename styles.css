@@ -3,26 +3,31 @@ body {
     background: #eeeeee;
     text-align: center;
 }
+
 #page-container {
     display: inline-block;
     width: 100%;
     max-width: 970px;
     text-align: left;
 }
+
 #loader {
     text-align: center;
     margin-top: -50px;
 }
+
 #title {
     margin-top: 40px;
     margin-left: 2%;
     color: #424242;
 }
+
 #search-box {
     width: 100%;
     text-align: right;
     margin-top: -67px;
 }
+
 #search-cancel {
     display: none;
     position: relative;
@@ -39,9 +44,11 @@ body {
     transition: background 0.3s;
     border-radius: 50%;
 }
+
 #search-cancel:hover {
     cursor: pointer;
 }
+
 #search-input {
     width: 50px;
     height: 50px;
@@ -56,10 +63,12 @@ body {
     -webkit-appearance: none;
     padding: 0px;
 }
+
 #search-input:hover {
     cursor: pointer;
     background: #e0e0e0;
 }
+
 #search-input:focus {
     background: #e0e0e0;
     text-align: left;
@@ -67,22 +76,29 @@ body {
     font-size: 15px;
     color: #616161;
 }
+
 #search-input:hover:focus {
     cursor: text;
 }
+
 #search-failed {
     display: none;
     margin-top: 40px;
     margin-left: calc(2% + 15px);
     color: #9e9e9e;
 }
-textarea, select, input, button { outline: none; }
+
+textarea, select, input, button {
+    outline: none;
+}
+
 .year-name {
     margin-top: 40px;
     margin-left: 2%;
     color: #9e9e9e;
     text-align: left;
 }
+
 .artist {
     outline: none;
     display: inline-block;
@@ -98,12 +114,15 @@ textarea, select, input, button { outline: none; }
     -webkit-transition: background 0.3s;
     transition: background 0.3s;
 }
+
 .artist:hover {
     background: #e0e0e0;
 }
+
 .artist-thumb {
     width: 90%;
 }
+
 .artist-bottom {
     display: table;
     vertical-align: middle;
@@ -111,6 +130,7 @@ textarea, select, input, button { outline: none; }
     text-decoration: none;
     width: 100%;
 }
+
 .artist-name {
     display: table-cell;
     vertical-align: middle;
@@ -121,13 +141,68 @@ textarea, select, input, button { outline: none; }
     padding-left: 8%;
     padding-right: 8%;
 }
+
 #footer {
     margin-top: 70px;
     margin-bottom: 20px;
     margin-left: 2%;
     padding: 10px;
 }
+
 #footer-text {
     color: #9e9e9e;
     font-size: 14px;
+}
+
+@media only screen and (max-width: 1050px) {
+    #title {
+        margin-top: 30px;
+    }
+}
+@media only screen and (max-width: 900px) {
+    #title {
+        margin-top: 25px;
+    }
+}
+@media only screen and (max-width: 700px) {
+    #title {
+        margin-top: 20px;
+        margin-left: 4%;
+    }
+    #search-failed {
+        margin-left: 25px;
+    }
+    #search-input {
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+    #seach-cancel {
+        right: calc(4% + 10px);
+    }
+    #page-container {
+        max-width: 370px;
+        margin-top: 5px;
+    }
+    .artist {
+        width: calc(31.33% - 3px);
+        padding-top: 1.5%;
+    }
+    .year-name {
+        margin-left: 4%;
+    }
+    .artist-name {
+        font-size: 14px;
+    }
+    .artist-bottom {
+        height: 43px;
+    }
+    #footer {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+}
+@media only screen and (max-width: 325px) {
+    #page-container {
+        margin-top: 0px;
+    }
 }

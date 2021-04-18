@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang='en'>
     <head>
-        <meta charset="utf-8">  
+        <meta charset='utf-8'>  
         <title>IHS Artists</title>
-        <meta name="description" content="Explore the many wonderful artworks created by students over the years at Irvington High School in Irvington, NY.">
-        <link rel="stylesheet" href="styles.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
-        <link href="/fonts/main-font.css" rel="stylesheet">
+        <meta name='description' content='Explore the many wonderful artworks created by students over the years at Irvington High School in Irvington, NY.'>
+        <link rel='stylesheet' href='styles.css'>
+        <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1.0'>
+        <link href='/fonts/main-font.css' rel='stylesheet'>
         <link href='/fonts/material-icons.css' rel='stylesheet'>
     </head>
     <body>
@@ -17,10 +17,11 @@
                 <br><div id='search-cancel' onclick='clearSearch()'>x</div>
             </div>
             <h3 id='search-failed'>No search results.</h3>
+            <span id='years'></span>
+            <div id='footer'><span id='footer-text'></span></div>
         </div>
-        <br><img id="loader" alt="Loading..." src="/images/loader.gif">
         
-        <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
-        <script src="scripts.js"></script>
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js' integrity='sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==' crossorigin='anonymous'></script>
+        <script src='scripts.js'></script>
     </body>
 </html>

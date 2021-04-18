@@ -1,253 +1,186 @@
-var deviceType = 'desktop';
 
-var maxMobileWidth = 370;
+loadData();
 
-function resizeWindow(){
-    if(window.innerWidth < 1050){
-        $('#title').css('margin-top', '30px');
+// Logic for getting the data from the server
+function loadData() {
+
+    // Custom session storage cache logic
+    if (typeof (Storage) !== "undefined") {
+        if (sessionStorage.frontData && sessionStorage.frontDataExpire) {
+
+            var frontDataExpire = new Date(sessionStorage.frontDataExpire);
+            var now = new Date();
+
+            if ((now - frontDataExpire) / 1000 / 60 < 15) {
+                renderPage(JSON.parse(sessionStorage.frontData));
+                preloadArtistData();
+            } else {
+                loadFrontData(true);
+            }
+        } else {
+            loadFrontData(true);
+        }
+    } else {
+        loadFrontData(false);
     }
-    if(window.innerWidth < 900){
-        $('#title').css('margin-top', '25px');
-    }
-    if(window.innerWidth < 700){
-        deviceType = 'mobile';
-        $('#title').css('margin-left', '4%');
-        $('#search-failed').css('margin-left', '25px');
-        $('#search-input').css('margin-right', '10px').css('margin-left', '10px');
-        $('#search-cancel').css('right', 'calc(4% + 10px)');
-        $('#title').css('margin-top', '20px');
-        
-        $('#page-container').css('max-width', maxMobileWidth + 'px').css('margin-top', '5px');
-        
-        if(window.innerWidth < 395){
-            $('#page-container').css('margin-top', '0px');
+
+    // Get the front data from the server, render the page, and store to custom cache
+    async function loadFrontData(store) {
+
+        // Request data and render page
+        let res = await fetch('/data/front-data.json');
+        let frontData = await res.json();
+        renderPage(frontData);
+
+        // Store to custom cache
+        if (store) {
+            sessionStorage.frontData = JSON.stringify(frontData);
+            sessionStorage.frontDataExpire = new Date();
+            preloadArtistData();
         }
     }
+
+    // Get the artist data from the server and store to custom cache
+    async function preloadArtistData() {
+        if (sessionStorage.artistData && sessionStorage.artistDataExpire) {
+            var artistDataExpire = new Date(sessionStorage.artistDataExpire);
+            var now = new Date();
+
+            if ((now - artistDataExpire) / 1000 / 60 <= 15) {
+                return;
+            }
+        }
+
+        let res = await fetch('/data/artist-data.json');
+        let artistData = await res.json();
+        sessionStorage.artistData = JSON.stringify(artistData);
+        sessionStorage.artistDataExpire = new Date();
+    }
 }
-resizeWindow();
 
-function loadPage(frontData){
-    $('#loader').css('display', 'none');
+// Render the front page
+function renderPage(frontData) {
 
-    console.log(frontData);
-    
-    for(var i = frontData.years.length - 1; i > -1; i--){
+    // Determine the device type from window size
+    let deviceType = (window.innerWidth < 700) ? 'mobile' : 'desktop';
 
-        if(!frontData.years[i].name.toLowerCase().includes('hidden')){
-            $('#page-container').append('<div class="year" id="year'+ i +'"><h2 class="year-name">'+ frontData.years[i].name +'</h2></div>');
+    // Go through each year and add it to page if it isn't hidden
+    for (var i = frontData.years.length - 1; i > -1; i--) {
 
-            for(var j = 0; j < frontData.years[i][deviceType].length; j++){
-                $('#year'+ i).append(`
-                    <a href="image/?a=`+ frontData.years[i][deviceType][j] +`&g=`+ frontData[frontData.years[i][deviceType][j]].link[0] +`&i=`+ frontData[frontData.years[i][deviceType][j]].link[1] +`&t=`+ frontData[frontData.years[i][deviceType][j]].name.split("'").join("\\'") +`\`" class="artist">
-                        <img alt="Thumbnail image for ` + frontData[frontData.years[i][deviceType][j]].name + `" class="artist-thumb" src="/images/artist-thumb--` + frontData.years[i][deviceType][j] + `.jpg">
+        if (!frontData.years[i].name.toLowerCase().includes('hidden')) {
+            $('#years').append(`<div class='year' id='year-${i}'><h2 class='year-name'>${frontData.years[i].name}</h2></div>`);
+
+            // Go through each artist for the year and add to page
+            for (var j = 0; j < frontData.years[i][deviceType].length; j++) {
+                $('#year-' + i).append(`
+                    <a href="image/?a=${frontData.years[i][deviceType][j]}&g=${frontData[frontData.years[i][deviceType][j]].link[0]}&i=${frontData[frontData.years[i][deviceType][j]].link[1]}&t=${frontData[frontData.years[i][deviceType][j]].name.split("'").join("\\'")}" class="artist">
+                        <img alt="Thumbnail image for ${frontData[frontData.years[i][deviceType][j]].name}" class="artist-thumb" src="/images/artist-thumb--${frontData.years[i][deviceType][j]}.jpg">
                         <div class="artist-bottom">
-                            <p class="artist-name">`+ frontData[frontData.years[i][deviceType][j]].name +`</p>
+                            <p class="artist-name">${frontData[frontData.years[i][deviceType][j]].name}</p>
                         </div>
                     </a>
                 `);
             }
-
-            if(deviceType == 'mobile'){
-                $('.artist').css('width', 'calc(31.33% - 3px)').css('padding-top', '1.5%');
-                $('.year-name').css('margin-left', '4%');
-                $('.artist-name').css('font-size', '14px');
-                $('.artist-bottom').css('height', '43px');
-            }
         }
     }
-    $('#page-container').append("<div id='footer'><span id='footer-text'>© Copyright **YEAR**, All Rights Reserved<br><br>Website designed and coded by Josh Chang.</span></div>");
-    
-    var today = new Date();
-    $('#footer').html($('#footer').html().split('**YEAR**').join(today.getFullYear().toString()));
-    
-    if(deviceType == 'mobile'){
-        $('#footer').css('margin-left', '15px').css('margin-right', '15px');
-    }
+
+    // Add a footer with the current year
+    $('footer-text').text(`© Copyright ${new Date().getFullYear().toString()}, All Rights Reserved<br><br>Website designed and coded by Josh Chang.`);
+
+    initSearch();
 }
 
-function preloadArtistData(){
-    if(sessionStorage.artistData && sessionStorage.artistDataExpire){
-        var artistDataExpire = new Date(sessionStorage.artistDataExpire);
-        var now = new Date();
-            
-        if(Math.abs(artistDataExpire - now) / 1000 / 60 > 120){
-            $.get('/data/artist-data.json', artistData => {
-                sessionStorage.artistData = JSON.stringify(artistData);
-                sessionStorage.artistDataExpire = new Date();
-            });
-        }
-    } else {
-        $.get('/data/artist-data.json', artistData => {
-            sessionStorage.artistData = JSON.stringify(artistData);
-            sessionStorage.artistDataExpire = new Date();
-        });
-    }
-}
+// Initiate the functions needed to make the search box work
+function initSearch() {
 
-if (typeof(Storage) !== "undefined") {
-    if(sessionStorage.frontData && sessionStorage.frontDataExpire){
-        
-        var frontDataExpire = new Date(sessionStorage.frontDataExpire);
-        var now = new Date();
-        
-        if(Math.abs(frontDataExpire - now) / 1000 / 60 < 120){
-            loadPage(JSON.parse(sessionStorage.frontData));
-            preloadArtistData();
+    // When search button is clicked
+    window.expandSearch = function () {
+        $('#search-input')
+            .val('')
+            .removeClass('material-icons')
+            .addClass('search-input-on')
+            .removeAttr('onclick')
+            .attr('readOnly', false)
+
+        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+        if (isSafari) {
+            $('#search-input').css('width', 'calc(92% - 11px)');
         } else {
-            $.get('/data/front-data.json', frontData => {
-                loadPage(frontData);
-                sessionStorage.frontData = JSON.stringify(frontData);
-                sessionStorage.frontDataExpire = new Date();
-                preloadArtistData();
-            });
+            $('#search-input').css('width', 'calc(96% - 11px)');
         }
-    } else {
-        $.get('/data/front-data.json', frontData => {
-            loadPage(frontData);
-            sessionStorage.frontData = JSON.stringify(frontData);
-            sessionStorage.frontDataExpire = new Date();
-            preloadArtistData();
-        });
     }
-} else {
-    $.get('/data/front-data.json', frontData => {
-        loadPage(frontData);
-    });
-}
 
-function expandSearch() {
-    $('#search-input').removeClass('material-icons').attr('onclick', '').css('background', '#e0e0e0').attr('readOnly', false);
-    
-    if($('#search-input').val() == 'search'){
-        $('#search-input').val('');
-    }
-    if(deviceType == 'mobile'){
-        $('#search-input').css('width', 'calc(92% - 11px)');
-    }
-    if(deviceType == 'desktop'){
-        $('#search-input').css('width', 'calc(96% - 11px)');
-    }
-}
-function clearSearch() {
-    $(".artist").show();
-    $('.year-name').show();
-    $('#search-failed').hide();
-    $('#search-input').attr('onclick', '').attr('readOnly', false);
-    $('#search-input').focus();
-    $("#search-cancel").css('display', 'none');
-    $('#search-box').css('margin-bottom', '0px');
-    $('#search-input').val('');
-}
-$('#search-input').focusout(function() {
-    if($('#search-input').val().length == 0 || $('#search-input').val() == 'search'){
-        $('#search-input').addClass('material-icons').attr('onclick', 'expandSearch()').val('search').css('width', '50px').css('background', 'white').attr('readOnly', false);
-        
-    } else {
-        $('#search-input').focus().attr('onclick', 'expandSearch()').attr('readOnly', true);
-    }
-});
-$('#search-input').hover(function() {
-    $('#search-input').css('background', '#e0e0e0');
-});
-$('#search-input').mouseout(function() {
-    if($('#search-input').is(":focus") == false){
-        $('#search-input').css('background', 'white');
-    }
-});
-
-function boyerMooreSearch(text, pattern) {
-    if (pattern.length === 0) {
-        return 1;
-    }
-    let charTable = makeCharTable(pattern);
-    let offsetTable = makeOffsetTable(pattern);
-
-    for (let i = pattern.length - 1, j; i < text.length;) {
-        for (j = pattern.length - 1; pattern[j] == text[i]; i--, j--) {
-            if (j === 0) {
-                return i;
-            }
-        }
-        const charCode = text.charCodeAt(i);
-        i+= Math.max(offsetTable[pattern.length - 1 - j], charTable[charCode]);
-    }
-    return -1;
-}
-function makeCharTable(pattern) {
-    let table = [];
-    for (let i = 0; i < 65536; i++) {
-        table.push(pattern.length);
-    }
-    for (let i = 0; i < pattern.length - 1; i++) {
-        const charCode = pattern.charCodeAt(i);
-        table[charCode] = pattern.length - 1 - i;
-    }
-    return table;
-}
-function makeOffsetTable(pattern) {
-    let table = [];
-    table.length = pattern.length;
-    let lastPrefixPosition = pattern.length;
-
-    for (let i = pattern.length; i > 0; i--) {
-        if (isPrefix(pattern, i)) {
-            lastPrefixPosition = i;
-        }
-        table[pattern.length - i] = lastPrefixPosition - 1 + pattern.length;
-    }
-    for (let i = 0; i < pattern.length - 1; i++) {
-        const slen = suffixLength(pattern, i);
-        table[slen] = pattern.length - 1 - i + slen;
-    }
-    return table;
-}
-function isPrefix(pattern, p) {
-    for (let i = p, j = 0; i < pattern.length; i++, j++) {
-        if (pattern[i] != pattern[j]) {
-            return false;
-        }
-        return true;
-    }
-}
-function suffixLength(pattern, p) {
-    let len = 0;
-    for (let i = p, j = pattern.length - 1; i >= 0 && pattern[i] == pattern[j]; i--, j--) {
-        len += 1;
-    }
-    return len;
-}
-
-$("#search-input").keyup(function () {
-    if($(this).val()){
-        $("#search-cancel").css('display', 'inline-block');
-        $('#search-box').css('margin-bottom', '-21px');
-    }
-    else {
-        $("#search-cancel").css('display', 'none');
+    // When the search field is cleared
+    window.clearSearch = function () {
+        $(".artist").show();
+        $('.year-name').show();
+        $('#search-failed').hide();
+        $('#search-input')
+            .removeAttr('onclick')
+            .attr('readOnly', false)
+            .val('')
+            .focus();
+        $('#search-cancel').hide();
         $('#search-box').css('margin-bottom', '0px');
     }
-    var searchQuery = $(this).val().toLocaleLowerCase().trim();
-    $(".artist").each(function() {
-        if(boyerMooreSearch($(this).text().toLocaleLowerCase(), searchQuery) == -1){
-            $(this).hide();
+
+    // When the user clicks off of the search field
+    $('#search-input').focusout(function () {
+        if ($('#search-input').val().length === 0 || $('#search-input').val() === 'search') {
+            $('#search-input')
+                .addClass('material-icons')
+                .removeClass('search-input-on')
+                .val('search')
+                .attr('onclick', 'expandSearch()')
+                .css('width', '50px')
+                .attr('readOnly', false);
+
         } else {
-            $(this).show();
+            $('#search-input')
+                .focus()
+                .attr('onclick', 'expandSearch()')
+                .attr('readOnly', true);
         }
     });
-    $(".year").each(function() {
-        if($(this).children('.artist:visible').length == 0){
-            $(this).children('.year-name').hide();
+
+    // Create a contains selector that is case insensitive
+    jQuery.expr[':'].icontains = function (a, i, m) {
+        return jQuery(a).text().toUpperCase()
+            .indexOf(m[3].toUpperCase()) >= 0;
+    };
+
+    // When the searchbox is updated, show updated search results
+    $("#search-input").keyup(function () {
+
+        // Conditional styles for the search box
+        if ($(this).val()) {
+            $('#search-cancel').show();
+            $('#search-box').css('margin-bottom', '-21px');
+        }
+        else {
+            $('#search-cancel').hide();
+            $('#search-box').css('margin-bottom', '0px');
+        }
+
+        // Hide all the artists that do not match
+        $(`.artist`).hide();
+        $(`.artist:icontains(${$(this).val()})`).show();
+
+        // Hide years with no mathces
+        $(".year").each(function () {
+            if ($(this).children('.artist:visible').length === 0) {
+                $(this).children('.year-name').hide();
+            } else {
+                $(this).children('.year-name').show();
+            }
+        });
+
+        // If there are no results, show an error message
+        if ($('.year-name:visible').length === 0) {
+            $('#search-failed').show();
         } else {
-            $(this).children('.year-name').show();
+            $('#search-failed').hide();
         }
     });
-    if($('.year-name:visible').length == 0){
-        $('#search-failed').show();
-    } else {
-        $('#search-failed').hide();
-    }
-});
-$("button").click(function () {
-   $("input").val('');
-   $(this).hide();
-});
+}
