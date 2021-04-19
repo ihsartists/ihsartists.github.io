@@ -9,29 +9,6 @@ var desktopPageHeight = 500;
 var statementPadding = 120;
 var statementMobilePadding = 60;
 
-// The image to be rendered
-var artist = urlParam('a');
-var artistName = urlParam('t');
-var gallery = urlParam('g');
-var image = urlParam('i');
-
-// Fill in missing data
-if(artistName) {
-    $('#title').text(artistName);
-    $('title').text(artistName);
-}
-if(gallery){} else {
-    gallery = 0;
-}
-if(image){} else {
-    image = 0;
-}
-
-// Preload image (will only load if it is not a video)
-$('#main-image').attr('src', '/images/image--' + artist + '-' + image + '.jpg').on('load', resizeImage);
-
-loadData();
-
 // Resize the image based on its dimensions
 function resizeImage() {
     
@@ -130,6 +107,8 @@ function resizeImage() {
     $("#main-image-padding-container").clone().appendTo("#image-zoom-box");
     
 }
+
+loadData();
 
 // Logic for getting the data from the server
 function loadData() {
@@ -315,13 +294,4 @@ function viewStatement(){
     }
     
     statement = true;
-}
-
-// Get a url paramater by its name
-function urlParam(name){
-    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-    if (results==null) {
-       return null;
-    }
-    return decodeURI(results[1]) || 0;
 }

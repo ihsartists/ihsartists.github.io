@@ -6,8 +6,6 @@
 	<meta name="description" content="">
 	<link rel="stylesheet" href="styles.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
-	<link href="/fonts/main-font.css" rel="stylesheet">
-	<link href='/fonts/material-icons.css' rel='stylesheet'>
 </head>
 <body>
 	<div id='page-container'>
@@ -50,7 +48,47 @@
 	</div>
 	<div id='overlay-close' class="material-icons">close</div>
 
+	<script>
+
+		// Get a url paramater by its name
+		function urlParam(name){
+			var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+			if (results==null) {
+			return null;
+			}
+			return decodeURI(results[1]) || 0;
+		}
+
+		// The image to be rendered
+		var artist = urlParam('a');
+		var artistName = urlParam('t');
+		var gallery = urlParam('g');
+		var image = urlParam('i');
+
+		// Fill in missing data
+		if(!gallery) gallery = 0;
+		if(!image) image = 0;
+
+		// Preload content
+		var img = document.getElementById('main-image');
+		img.setAttribute('src', '/images/image--' + artist + '-' + image + '.jpg')
+		window.addEventListener('load', function() {
+			if (img.complete) {
+				resizeImage()
+			} else {
+				img.addEventListener('load', resizeImage)
+			}
+		})
+		if (artistName) {
+			document.getElementById('title').innerText = artistName;
+			document.getElementsByTagName('title')[0].innerText = artistName;
+		}
+
+	</script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
     <script src="scripts.js"></script>
+
+	<link rel="preload" as="style" href="/fonts/material-icons.css" onload="this.rel='stylesheet'" />
+	<link rel="preload" as="style" href="/fonts/main-font.css" onload="this.rel='stylesheet'" />
 </body>
 </html>
