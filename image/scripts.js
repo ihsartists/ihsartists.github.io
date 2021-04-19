@@ -14,7 +14,6 @@ var artist = urlParam('a');
 var artistName = urlParam('t');
 var gallery = urlParam('g');
 var image = urlParam('i');
-var statement = urlParam('s');
 
 // Fill in missing data
 if(artistName) {
@@ -32,179 +31,6 @@ if(image){} else {
 $('#main-image').attr('src', '/images/image--' + artist + '-' + image + '.jpg').on('load', resizeImage);
 
 loadData();
-
-// Logic for getting the data from the server
-function loadData() {
-
-    // Custom session storage cache logic
-    if(artist){
-        if (typeof (Storage) !== "undefined") {
-            if (sessionStorage.artistData && sessionStorage.artistDataExpire) {
-    
-                var artistDataExpire = new Date(sessionStorage.artistDataExpire);
-                var now = new Date();
-    
-                if ((now - artistDataExpire) / 1000 / 60 < 15) {
-                    renderPage(JSON.parse(sessionStorage.artistData)[artist]);
-                    preloadFrontData();
-                } else {
-                    loadArtistData(true);
-                }
-            } else {
-                loadArtistData(true);
-            }
-        } else {
-            loadArtistData(false);
-        }
-    } else {
-        window.location = '/404.html';
-    }
-
-    // Get the artist data from the server, render the page, and store to custom cache
-    async function loadArtistData(store) {
-
-        // Request data and render page
-        let res = await fetch('/data/artist-data.json');
-        let artistData = await res.json();
-        renderPage(artistData[artist]);
-
-        // Store to custom cache
-        if (store) {
-            sessionStorage.artistData = JSON.stringify(artistData);
-            sessionStorage.artistDataExpire = new Date();
-            preloadFrontData();
-        }
-    }
-
-    // Get the front data from the server and store to custom cache
-    async function preloadFrontData() {
-        if (sessionStorage.frontData && sessionStorage.frontDataExpire) {
-            var frontDataExpire = new Date(sessionStorage.frontDataExpire);
-            var now = new Date();
-
-            if ((now - frontDataExpire) / 1000 / 60 <= 15) {
-                return;
-            }
-        }
-
-        let res = await fetch('/data/front-data.json');
-        let frontData = await res.json();
-        sessionStorage.frontData = JSON.stringify(frontData);
-        sessionStorage.frontDataExpire = new Date();
-    }
-}
-
-// Render the image page
-function renderPage(artistData){
-
-    if(artistData){
-        if(artistData.galleries[gallery]){
-            if(artistData.images[image]){
-                console.log(artistData);
-            } else {
-                window.location = '/404.html';
-            }
-        } else {
-            window.location = '/404.html';
-        }
-    } else {
-        window.location = '/404.html';
-    }
-    
-    $('#title').text(artistData.name.split("%39").join("'")); $('title').text(artistData.name.split("%39").join("'"));
-
-    if (history.pushState) {
-        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?a=' + artist + '&g=' + gallery + '&i=' + image + '&t=' + artistData.name.replace("'", "\\'");
-        
-        if(statement == true){
-            newurl += '&s=true';
-        }
-        window.history.pushState({path:newurl},'',newurl);
-    }
-    
-    $('#image-description').text(artistData.images[image].name);
-    if(deviceType === 'desktop'){
-        $('#gallery-navigator').css('margin-top', '-' + ($('#image-description').height() + 532) + 'px');
-    }
-    
-    if(artistData.statement.type === 'text'){
-        $('meta[name=description]').attr('content', artistData.statement.content.split('\n').join(' '));
-        $('#statement').html(artistData.statement.content.split('\n').join('<br>'));
-        
-        if(statement){
-            viewStatement();
-        }
-    }
-    if(artistData.statement.type === 'image'){
-        $('#statement').html('<img alt="Artist statement of ' + artistData.name.split("%39").join("'")); $('title').text(artistData.name.split("%39").join("'") + '" id="statement-image" src="/images/statement--' + artist + '.jpg">');
-        $('#statement-image').on('load', () => {
-            $('#statement-image').css('width', '100%');
-            if(statement){
-                viewStatement();
-            }
-        });
-    }
-    
-    if(artistData.images[image].type === 'image'){
-        $('#main-image').attr('alt', 'Artwork: ' + artistData.images[image].name).attr('src', '/images/image--' + artist + '-' + image + '.jpg').on('load', () => {
-            $('#loader').css('display', 'none');
-            $('#main-image-container').css('display', 'block');
-
-            resizeImage();
-        });
-    }
-   
-    for(var i = 0; i < artistData.galleries[gallery].order.length; i++){
-        $('#gallery-container').append(`
-            <a href='/image/?a=` + artist + `&g=` + gallery + `&i=` + artistData.galleries[gallery].order[i] + `&t=` + urlParam("t") + `'>
-                <img alt="Thumbnail image of artwork: ` + artistData.images[artistData.galleries[gallery].order[i]].name + `" class="gallery-image" src="/images/image-thumb--` + artist + `-` + artistData.galleries[gallery].order[i] + `.jpg">
-            </a>
-        `);
-    }
-    
-    if(deviceType === 'desktop'){
-        $('#gallery-container').css('height', $('#gallery-container').width() * 0.75 + 'px');
-        $('.gallery-image').css('height', ($('#gallery-container').width() / 4 - 4) + 'px');
-    } else {
-        $('#gallery-container').css('text-align', 'left');
-    }
-    
-    for(var i = 0; i < artistData.galleries.length; i++){
-        if(i === parseInt(gallery)) {
-           $('#gallery-navigator-text').append('<a class="gallery-navigator-tab" id="gallery-navigator-tab--current">' + artistData.galleries[i].name + '</a>');
-        } else {
-            $('#gallery-navigator-text').append('<a class="gallery-navigator-tab" href="/image/?a=' + artist + '&g=' + i + '&i=' + artistData.galleries[i].order[0] + '&t=' + $.urlParam('t') + '">' + artistData.galleries[i].name + '</a>');
-        }
-    }
-    
-    if(artistData.images[image].type === 'video'){
-        document.getElementById('main-image-scroll-container').outerHTML = '<iframe width="100%" height="100%" src="' + artistData.images[image].embed + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
-
-        $('#loader').css('display', 'none');
-        $('#main-image-container').css('display', 'block');
-        $('#gallery-container').css('display', 'inline-block');
-        $('#footer').css('display', 'block');
-        
-        var containerWidth = $('#main-image-container').width();
-        if(deviceType == 'mobile'){
-            $('#main-image-padding-container').css('max-width','calc(100% - 18px)').width('100%').height(containerWidth * 0.5625);
-        } else {
-            containerWidth -= desktopGalleryWidth;
-            $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px').height(containerWidth * 0.5625).css('max-height', '337.5px');
-            
-            if($('#main-image-container').height() < desktopPageHeight){
-                $('#main-image-container').css('margin-top', (desktopPageHeight - $('#main-image-padding-container').height()) + 'px');
-                
-                if(parseInt($('#main-image-container').css('margin-top')) < 50 - (510 - desktopPageHeight)){
-                    $('#main-image-container').css('margin-top', (50 - (510 - desktopPageHeight)) + 'px');
-                }
-            }
-        }
-    }
-
-    // Update the current year in the footer
-    $('.current-year').text(new Date().getFullYear().toString());
-}
 
 // Resize the image based on its dimensions
 function resizeImage() {
@@ -303,6 +129,152 @@ function resizeImage() {
     $("#image-zoom-box").html('');
     $("#main-image-padding-container").clone().appendTo("#image-zoom-box");
     
+}
+
+// Logic for getting the data from the server
+function loadData() {
+
+    // Custom session storage cache logic
+    if(artist){
+        if (typeof (Storage) !== "undefined") {
+            if (sessionStorage.artistData && sessionStorage.artistDataExpire) {
+    
+                var artistDataExpire = new Date(sessionStorage.artistDataExpire);
+                var now = new Date();
+    
+                if ((now - artistDataExpire) / 1000 / 60 < 15) {
+                    renderPage(JSON.parse(sessionStorage.artistData)[artist]);
+                    preloadFrontData();
+                } else {
+                    loadArtistData(true);
+                }
+            } else {
+                loadArtistData(true);
+            }
+        } else {
+            loadArtistData(false);
+        }
+    } else {
+        window.location = '/404.html';
+    }
+
+    // Get the artist data from the server, render the page, and store to custom cache
+    async function loadArtistData(store) {
+
+        // Request data and render page
+        let res = await fetch('/data/artist-data.json');
+        let artistData = await res.json();
+        renderPage(artistData[artist]);
+
+        // Store to custom cache
+        if (store) {
+            sessionStorage.artistData = JSON.stringify(artistData);
+            sessionStorage.artistDataExpire = new Date();
+            preloadFrontData();
+        }
+    }
+
+    // Get the front data from the server and store to custom cache
+    async function preloadFrontData() {
+        if (sessionStorage.frontData && sessionStorage.frontDataExpire) {
+            var frontDataExpire = new Date(sessionStorage.frontDataExpire);
+            var now = new Date();
+
+            if ((now - frontDataExpire) / 1000 / 60 <= 15) {
+                return;
+            }
+        }
+
+        let res = await fetch('/data/front-data.json');
+        let frontData = await res.json();
+        sessionStorage.frontData = JSON.stringify(frontData);
+        sessionStorage.frontDataExpire = new Date();
+    }
+}
+
+// Render the image page
+function renderPage(artistData){
+
+    // Determine if data is valid
+    if(artistData){
+        if(artistData.galleries[gallery]){
+            if(artistData.images[image]){
+                console.log(artistData);
+            } else {
+                window.location = '/404.html';
+            }
+        } else {
+            window.location = '/404.html';
+        }
+    } else {
+        window.location = '/404.html';
+    }
+    
+    // Add artist name and image description to page
+    $('#title').text(artistData.name.split("%39").join("'")); $('title').text(artistData.name.split("%39").join("'"));
+    $('#image-description').text(artistData.images[image].name);
+    
+    if(deviceType === 'desktop'){
+        $('#gallery-navigator').css('margin-top', '-' + ($('#image-description').height() + 532) + 'px');
+    }
+    
+    if(artistData.statement.type === 'text'){
+        $('meta[name=description]').attr('content', artistData.statement.content.split('\n').join(' '));
+        $('#statement').html(artistData.statement.content.split('\n').join('<br>'));
+    } else {
+        $('#statement').html('<img alt="Artist statement of ' + artistData.name.split("%39").join("'")); $('title').text(artistData.name.split("%39").join("'") + '" id="statement-image" src="/images/statement--' + artist + '.jpg">');
+    }
+   
+    for(let i = 0; i < artistData.galleries[gallery].order.length; i++){
+        $('#gallery-container').append(`
+            <a href='/image/?a=` + artist + `&g=` + gallery + `&i=` + artistData.galleries[gallery].order[i] + `&t=` + urlParam("t") + `'>
+                <img alt="Thumbnail image of artwork: ` + artistData.images[artistData.galleries[gallery].order[i]].name + `" class="gallery-image" src="/images/image-thumb--` + artist + `-` + artistData.galleries[gallery].order[i] + `.jpg">
+            </a>
+        `);
+    }
+    
+    if(deviceType === 'desktop'){
+        $('#gallery-container').css('height', $('#gallery-container').width() * 0.75 + 'px');
+        $('.gallery-image').css('height', ($('#gallery-container').width() / 4 - 4) + 'px');
+    }
+    
+    for(let i = 0; i < artistData.galleries.length; i++){
+        if(i === parseInt(gallery)) {
+            $('#gallery-navigator-text').append('<a class="gallery-navigator-tab" id="gallery-navigator-tab--current">' + artistData.galleries[i].name + '</a>');
+        } else {
+            $('#gallery-navigator-text').append('<a class="gallery-navigator-tab" href="/image/?a=' + artist + '&g=' + i + '&i=' + artistData.galleries[i].order[0] + '&t=' + artistName + '">' + artistData.galleries[i].name + '</a>');
+        }
+    }
+    
+    if(artistData.images[image].type === 'video'){
+        $('#main-image-scroll-container')[0].outerHTML = `<iframe width="100%" height="100%" src="${artistData.images[image].embed}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        $('#main-image-container').show();
+        
+        var containerWidth = $('#main-image-container').width();
+        if(deviceType == 'mobile'){
+            $('#main-image-padding-container').css('max-width','calc(100% - 18px)').width('100%').height(containerWidth * 0.5625);
+        } else {
+            containerWidth -= desktopGalleryWidth;
+            $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px').height(containerWidth * 0.5625).css('max-height', '337.5px');
+            
+            if($('#main-image-container').height() < desktopPageHeight){
+                $('#main-image-container').css('margin-top', (desktopPageHeight - $('#main-image-padding-container').height()) + 'px');
+                
+                if(parseInt($('#main-image-container').css('margin-top')) < 50 - (510 - desktopPageHeight)){
+                    $('#main-image-container').css('margin-top', (50 - (510 - desktopPageHeight)) + 'px');
+                }
+            }
+        }
+    }
+
+    // Update the current year in the footer
+    $('.current-year').text(new Date().getFullYear().toString());
+
+    // Revise the url if it is incorrect
+    if (history.pushState) {
+        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?a=' + artist + '&g=' + gallery + '&i=' + image + '&t=' + artistData.name.replace("'", "\\'");
+        window.history.pushState({path:newurl},'',newurl);
+    }
 }
 
 // Expand image in new tab

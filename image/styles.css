@@ -219,7 +219,6 @@ body {
     margin-bottom: 20px;
     margin-left: 2%;
     padding: 10px;
-    display: none;
 }
 #footer-text {
     color: #9e9e9e;
@@ -295,11 +294,15 @@ body {
     #statement-button {
         margin-left: 25px;
     }
+    #statement-image {
+        width: 100%;
+    }
     
     #gallery-container {
         top: 18px;
         margin: 10px;
         max-width: 370px;
+        text-align: left;
     }
     #gallery-center-container {
         text-align: center;
