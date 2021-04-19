@@ -35,7 +35,7 @@ body {
     text-align: center;
     padding-top: 4px;
     margin-bottom: -10px;
-    top: -40px;
+    top: -42px;
     right: calc(2% + 8px);
     width: 30px;
     height: 26px;
@@ -61,7 +61,7 @@ body {
     transition: background 0.3s, width 0.5s;
     border-radius: 0;
     -webkit-appearance: none;
-    padding: 0px; 
+    padding: 0px;
     max-width: 400px;
 }
 
@@ -81,6 +81,12 @@ body {
     font-size: 15px;
     color: #616161;
     width: calc(96% - 11px);
+}
+
+input[type="text"] {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 #search-failed {
@@ -161,11 +167,13 @@ textarea, select, input, button {
         margin-top: 30px;
     }
 }
+
 @media only screen and (max-width: 900px) {
     #title {
         margin-top: 25px;
     }
 }
+
 @media only screen and (max-width: 700px) {
     #title {
         margin-top: 20px;
@@ -202,7 +210,14 @@ textarea, select, input, button {
         margin-left: 15px;
         margin-right: 15px;
     }
+    #search-input:hover {
+        background: white;
+    }
+    #search-input:hover.search-input-on {
+        background: #e0e0e0;
+    }
 }
+
 @media only screen and (max-width: 325px) {
     #page-container {
         margin-top: 0px;

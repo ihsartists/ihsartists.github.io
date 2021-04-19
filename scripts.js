@@ -101,12 +101,8 @@ function initSearch() {
             .addClass('search-input-on')
             .removeAttr('onmousedown')
             .attr('readOnly', false)
-
-        let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        if (isSafari) {
-            $('body').append('<style>#search-input { width: calc(92% - 11px) }</style>')
-        }
     }
+    $('#search-input').focusin(expandSearch);
 
     // When the search field is cleared
     window.clearSearch = function () {
