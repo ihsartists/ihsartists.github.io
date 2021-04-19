@@ -317,6 +317,10 @@ body {
         max-width: 370px;
         margin-top: 5px;
     }
+
+    #main-image.default {
+        height: 300px;
+    }
     
     #statement-box {
         padding: 30px;

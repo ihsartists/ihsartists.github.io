@@ -1,7 +1,4 @@
-// resizeImage(100, 450)
-document.getElementById('main-image').addEventListener('load', function(){
-    resizeImage(this.naturalWidth, this.naturalHeight, true)
-})
+document.getElementById('main-image').addEventListener('load', resizeImage)
 
 // Determine the device type from window size
 var deviceType = (window.innerWidth < 700) ? 'mobile' : 'desktop';
@@ -14,7 +11,7 @@ var statementPadding = 120;
 var statementMobilePadding = 60;
 
 // Resize the image based on its dimensions
-function resizeImage(naturalWidth, naturalHeight, flag) {
+function resizeImage(naturalWidth, naturalHeight) {
 
     console.log(naturalWidth, naturalHeight)
 
@@ -23,9 +20,10 @@ function resizeImage(naturalWidth, naturalHeight, flag) {
     var imgScr = $('#main-image-scroll-container');
     var imgPad = $('#main-image-padding-container');
 
-    if(flag){
-        img.removeClass('default');
-    }
+    var naturalWidth = img.naturalHeight;
+    var naturalHeight = img.naturalWidth;
+
+    img.removeClass('default');
 
     var containerWidth = imgCont.width();
    
