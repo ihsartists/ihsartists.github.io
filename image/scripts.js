@@ -196,19 +196,10 @@ function loadData() {
 function renderPage(artistData){
 
     // Determine if data is valid
-    if(artistData){
-        if(artistData.galleries[gallery]){
-            if(artistData.images[image]){
-                console.log(artistData);
-            } else {
-                window.location = '/404.html';
-            }
-        } else {
-            window.location = '/404.html';
-        }
-    } else {
-        window.location = '/404.html';
-    }
+    (() => {
+        if(artistData) if(artistData.galleries[gallery]) if(artistData.images[image]) return;
+        location = '/404.html';
+    })();
     
     // Add artist name and image description to page
     $('#title').text(artistData.name.split("%39").join("'")); $('title').text(artistData.name.split("%39").join("'"));
@@ -227,15 +218,10 @@ function renderPage(artistData){
    
     for(let i = 0; i < artistData.galleries[gallery].order.length; i++){
         $('#gallery-container').append(`
-            <a href='/image/?a=` + artist + `&g=` + gallery + `&i=` + artistData.galleries[gallery].order[i] + `&t=` + urlParam("t") + `'>
-                <img alt="Thumbnail image of artwork: ` + artistData.images[artistData.galleries[gallery].order[i]].name + `" class="gallery-image" src="/images/image-thumb--` + artist + `-` + artistData.galleries[gallery].order[i] + `.jpg">
+            <a href='/image/?a=${artist}&g=${gallery}&i=${artistData.galleries[gallery].order[i]}&t=${artistName}'>
+                <img alt="Thumbnail image of artwork: ${artistData.images[artistData.galleries[gallery].order[i]].name}" class="gallery-image" src="/images/image-thumb--${artist}-${artistData.galleries[gallery].order[i]}.jpg">
             </a>
         `);
-    }
-    
-    if(deviceType === 'desktop'){
-        $('#gallery-container').css('height', $('#gallery-container').width() * 0.75 + 'px');
-        $('.gallery-image').css('height', ($('#gallery-container').width() / 4 - 4) + 'px');
     }
     
     for(let i = 0; i < artistData.galleries.length; i++){
