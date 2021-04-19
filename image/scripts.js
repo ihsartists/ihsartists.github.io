@@ -18,8 +18,8 @@ function resizeImage() {
     var imgScr = $('#main-image-scroll-container');
     var imgPad = $('#main-image-padding-container');
 
-    var naturalWidth = img.naturalHeight;
-    var naturalHeight = img.naturalWidth;
+    var naturalWidth = this.naturalWidth;
+    var naturalHeight = this.naturalHeight;
 
     img.removeClass('default');
 
@@ -39,7 +39,7 @@ function resizeImage() {
         }
     }
     
-    if(scaleType == 'dynamic'){
+    if(scaleType === 'dynamic'){
         if(naturalHeight > 0.75 * naturalWidth){
             naturalWidth = (naturalWidth / naturalHeight) * 450;
             naturalHeight = 450;
@@ -50,20 +50,20 @@ function resizeImage() {
             scaleType = 'width';
         }
     }
-    if(deviceType == 'desktop'){
+    if(deviceType === 'desktop'){
         containerWidth -= desktopGalleryWidth;
         
-        if(scaleType == 'width'){
+        if(scaleType === 'width'){
             img.css('width', containerWidth + 'px').css('max-width', '600px');
         }
-        if(scaleType == 'height'){
+        if(scaleType === 'height'){
             img.css('height', containerWidth * (naturalHeight / naturalWidth) + 'px').css('max-height', '450px');
         }
-        if(scaleType == 'vertical-scroll'){
+        if(scaleType === 'vertical-scroll'){
             imgScr.css('overflow-y', 'scroll').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
             img.css('width', containerWidth + 'px').css('max-width', '600px');
         }
-        if(scaleType == 'horizontal-scroll'){
+        if(scaleType === 'horizontal-scroll'){
             imgScr.css('overflow-x', 'scroll');
             imgPad.css('width', containerWidth + 'px').css('max-width', '600px');
             img.css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
