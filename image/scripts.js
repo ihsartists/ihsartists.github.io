@@ -13,8 +13,6 @@ var statementMobilePadding = 60;
 // Resize the image based on its dimensions
 function resizeImage(naturalWidth, naturalHeight) {
 
-    console.log(naturalWidth, naturalHeight)
-
     var img = $('#main-image');
     var imgCont = $('#main-image-container');
     var imgScr = $('#main-image-scroll-container');
