@@ -72,13 +72,7 @@
 		// Preload content
 		var img = document.getElementById('main-image');
 		img.setAttribute('src', '/images/image--' + artist + '-' + image + '.jpg')
-		window.addEventListener('load', function() {
-			if (img.complete) {
-				resizeImage()
-			} else {
-				img.addEventListener('load', resizeImage)
-			}
-		})
+		
 		if (artistName) {
 			document.getElementById('title').innerText = artistName;
 			document.getElementsByTagName('title')[0].innerText = artistName;

@@ -1,4 +1,6 @@
 
+document.getElementById('main-image').addEventListener('load', () => {resizeImage(); console.log('p')})
+
 // Determine the device type from window size
 var deviceType = (window.innerWidth < 700) ? 'mobile' : 'desktop';
 
