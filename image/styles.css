@@ -55,7 +55,6 @@ body {
     margin-left: 2%;
     margin-top: 50px;
     text-align: right;
-    display: none;
 }
 #main-image-padding-container {
     display: inline-block;
@@ -66,9 +65,16 @@ body {
 }
 #main-image-scroll-container {
     overflow: none;
+    display: block;
 }
 #main-image {
     margin-bottom: -5px;
+}
+#main-image.default {
+    display: block;
+    width: 0px;
+    height: 450px;
+    visibility: hidden;
 }
 #main-image:hover {
     cursor: zoom-in;
@@ -86,7 +92,6 @@ body {
     background: white;
     padding: 8px;
     font-size: 0;
-    display: none;
 }
 .gallery-image {
     display: inline-block;

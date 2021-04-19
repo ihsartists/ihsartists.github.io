@@ -20,7 +20,7 @@
 		<div id='main-image-container'>
 			<div id='main-image-padding-container'>
 				<div id='main-image-scroll-container'>
-					<img id='main-image' onclick='expandImage()' src=''>
+					<img class='default' id='main-image' onclick='expandImage()'>
 				</div>
 			</div>
 		</div>
@@ -70,8 +70,7 @@
 		if(!image) image = 0;
 
 		// Preload content
-		var img = document.getElementById('main-image');
-		img.setAttribute('src', '/images/image--' + artist + '-' + image + '.jpg')
+		document.getElementById('main-image').setAttribute('src', '/images/image--' + artist + '-' + image + '.jpg')
 		
 		if (artistName) {
 			document.getElementById('title').innerText = artistName;

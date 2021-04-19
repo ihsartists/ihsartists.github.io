@@ -1,5 +1,7 @@
-
-document.getElementById('main-image').addEventListener('load', () => {resizeImage(); console.log('p')})
+// resizeImage(100, 450)
+document.getElementById('main-image').addEventListener('load', function(){
+    resizeImage(this.naturalWidth, this.naturalHeight, true)
+})
 
 // Determine the device type from window size
 var deviceType = (window.innerWidth < 700) ? 'mobile' : 'desktop';
@@ -12,15 +14,20 @@ var statementPadding = 120;
 var statementMobilePadding = 60;
 
 // Resize the image based on its dimensions
-function resizeImage() {
-    
-    $('#main-image-container').show();
-    $('#gallery-container').show();
-    $('#footer').show();
+function resizeImage(naturalWidth, naturalHeight, flag) {
 
-    var naturalWidth = $('#main-image')[0].naturalWidth;
-    var naturalHeight = $('#main-image')[0].naturalHeight;
-    var containerWidth = $('#main-image-container').width();
+    console.log(naturalWidth, naturalHeight)
+
+    var img = $('#main-image');
+    var imgCont = $('#main-image-container');
+    var imgScr = $('#main-image-scroll-container');
+    var imgPad = $('#main-image-padding-container');
+
+    if(flag){
+        img.removeClass('default');
+    }
+
+    var containerWidth = imgCont.width();
    
     var scaleType = 'dynamic';
     if(naturalWidth > 594 && naturalWidth < 608){
@@ -51,31 +58,31 @@ function resizeImage() {
         containerWidth -= desktopGalleryWidth;
         
         if(scaleType == 'width'){
-            $('#main-image').css('width', containerWidth + 'px').css('max-width', '600px');
+            img.css('width', containerWidth + 'px').css('max-width', '600px');
         }
         if(scaleType == 'height'){
-            $('#main-image').css('height', containerWidth * (naturalHeight / naturalWidth) + 'px').css('max-height', '450px');
+            img.css('height', containerWidth * (naturalHeight / naturalWidth) + 'px').css('max-height', '450px');
         }
         if(scaleType == 'vertical-scroll'){
-            $('#main-image-scroll-container').css('overflow-y', 'scroll').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
-            $('#main-image').css('width', containerWidth + 'px').css('max-width', '600px');
+            imgScr.css('overflow-y', 'scroll').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
+            img.css('width', containerWidth + 'px').css('max-width', '600px');
         }
         if(scaleType == 'horizontal-scroll'){
-            $('#main-image-scroll-container').css('overflow-x', 'scroll');
-            $('#main-image-padding-container').css('width', containerWidth + 'px').css('max-width', '600px');
-            $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
+            imgScr.css('overflow-x', 'scroll');
+            imgPad.css('width', containerWidth + 'px').css('max-width', '600px');
+            img.css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
         }
         
-        if($('#main-image').height() < containerWidth * 0.75){
-            $('#main-image-container').css('margin-top', (containerWidth * 0.75 - $('#main-image').height()) + 'px');
-            if(parseInt($('#main-image-container').css('margin-top')) < 50 - (510 - desktopPageHeight)){
-                $('#main-image-container').css('margin-top', (50 - (510 - desktopPageHeight)) + 'px');
+        if(img.height() < containerWidth * 0.75){
+            imgCont.css('margin-top', (containerWidth * 0.75 - img.height()) + 'px');
+            if(parseInt(imgCont.css('margin-top')) < 50 - (510 - desktopPageHeight)){
+                imgCont.css('margin-top', (50 - (510 - desktopPageHeight)) + 'px');
             }
         }
-        if($('#main-image-container').height() < desktopPageHeight){
-            $('#main-image-container').css('margin-top', (desktopPageHeight - $('#main-image-padding-container').height()) + 'px');
-            if(parseInt($('#main-image-container').css('margin-top')) < 50 - (510 - desktopPageHeight)){
-                $('#main-image-container').css('margin-top', (50 - (510 - desktopPageHeight)) + 'px');
+        if(imgCont.height() < desktopPageHeight){
+            imgCont.css('margin-top', (desktopPageHeight - imgPad.height()) + 'px');
+            if(parseInt(imgCont.css('margin-top')) < 50 - (510 - desktopPageHeight)){
+                imgCont.css('margin-top', (50 - (510 - desktopPageHeight)) + 'px');
             }
         }
     }
@@ -86,22 +93,22 @@ function resizeImage() {
         }
         
         if(scaleType == 'width'){
-            $('#main-image').css('width', containerWidth + 'px');
+            img.css('width', containerWidth + 'px');
         }
         if(scaleType == 'height'){
-            $('#main-image').css('max-width', containerWidth + 'px').css('height', '450px');
-            if($('#main-image').width() == maxMobileWidth || $('#main-image').width() == $('#main-image-container').width() - 23){
-                $('#main-image').css({height: ''});
+            img.css('max-width', containerWidth + 'px').css('height', '450px');
+            if(img.width() == maxMobileWidth || img.width() == imgCont.width() - 23){
+                img.css({height: ''});
             }
         }
         if(scaleType == 'vertical-scroll'){
-            $('#main-image-scroll-container').css('overflow-y', 'scroll').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
-            $('#main-image').css('width', containerWidth + 'px').css('max-width', '600px');
+            imgScr.css('overflow-y', 'scroll').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
+            img.css('width', containerWidth + 'px').css('max-width', '600px');
         }
         if(scaleType == 'horizontal-scroll'){
-            $('#main-image-scroll-container').css('overflow-x', 'scroll');
-            $('#main-image-padding-container').css('width', containerWidth + 'px');
-            $('#main-image').css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
+            imgScr.css('overflow-x', 'scroll');
+            imgPad.css('width', containerWidth + 'px');
+            img.css('height', containerWidth * 0.75 + 'px').css('max-height', '450px');
         }
     }
     
