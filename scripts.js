@@ -99,25 +99,22 @@ function initSearch() {
             .val('')
             .removeClass('material-icons')
             .addClass('search-input-on')
-            .removeAttr('onclick')
+            .removeAttr('onmousedown')
             .attr('readOnly', false)
 
-        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
+        let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         if (isSafari) {
-            $('#search-input').css('width', 'calc(92% - 11px)');
-        } else {
-            $('#search-input').css('width', 'calc(96% - 11px)');
+            $('body').append('<style>#search-input { width: calc(92% - 11px) }</style>')
         }
     }
 
     // When the search field is cleared
     window.clearSearch = function () {
-        $(".artist").show();
+        $('.artist').show();
         $('.year-name').show();
         $('#search-failed').hide();
         $('#search-input')
-            .removeAttr('onclick')
+            .removeAttr('onmousedown')
             .attr('readOnly', false)
             .val('')
             .focus();
@@ -132,15 +129,9 @@ function initSearch() {
                 .addClass('material-icons')
                 .removeClass('search-input-on')
                 .val('search')
-                .attr('onclick', 'expandSearch()')
-                .css('width', '50px')
+                .attr('onmousedown', 'expandSearch()')
                 .attr('readOnly', false);
 
-        } else {
-            $('#search-input')
-                .focus()
-                .attr('onclick', 'expandSearch()')
-                .attr('readOnly', true);
         }
     });
 
@@ -155,7 +146,7 @@ function initSearch() {
 
         // Conditional styles for the search box
         if ($(this).val()) {
-            $('#search-cancel').show();
+            $('#search-cancel').css('display', 'inline-block');
             $('#search-box').css('margin-bottom', '-21px');
         }
         else {
