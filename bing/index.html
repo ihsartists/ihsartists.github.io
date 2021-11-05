@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Bing Search</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+            iframe {
+                width: 100vw;
+                height: 100vh;
+            }
+            #search {
+                width: 300px;
+            }
+        </style>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <input id='search'>
+        <button id='go' onclick='go();'>Search</button>
+        <iframe id='embed'></iframe>
+        <script>
+            var search = document.getElementById('search');
+            var embed = document.getElementById('embed');
+            function go() {
+                fetch('https://script.google.com/macros/s/AKfycbwFX3i8Js8gLLVyy4UyvRPXxFS2WHKgGtgpCpwMDpsGtX6GGC-axA8M5vfkihyHiXkr/exec?url=https://www.bing.com/search?q=' + search.value.replace(' ', '+'))
+                .then(res => res.json())
+                .then(data => {
+                    embed.src = data.dataURI;
+                })
+            }
+        </script>
+    </body>
+</html>
